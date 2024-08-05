@@ -3,7 +3,6 @@ var router = express.Router();
 
 router.post("/new/furniture", function (req, res, next) {
 
-
 	const furniture_insert = sql`
 		INSERT INTO Furniture (
     		FurnitureID, ProductCode, Category_4ID, SupplierID, OriginID, 
@@ -73,12 +72,12 @@ router.post("/new/furniture", function (req, res, next) {
 		
 		-- Details Table
 		INSERT INTO Details (
-		    DetailsID, FurnitureID, ColourID, Assembly_Required, Height, Depth, Width, 
+		    DetailsID, ColourID, Assembly_Required, Height, Depth, Width, 
 		    Weight, Material, Stackable, Adjustability, Ergonomic, Mechanism, Lumbar_Support, 
 		    Compatible_With, Castors, Lifting_Capacity, Max_Load_Weight, Default_Warranty, 
 		    AUNZ_CodeID, Product_AccreditationID, Test_Certificate_Expiry
 		) VALUES (
-		    ${req.body.DetailsID}, ${req.body.FurnitureID}, ${req.body.ColourID}, ${req.body.Assembly_Required}, ${req.body.Height}, ${req.body.Depth}, ${req.body.Width}, 
+		    ${req.body.DetailsID}, ${req.body.ColourID}, ${req.body.Assembly_Required}, ${req.body.Height}, ${req.body.Depth}, ${req.body.Width}, 
 		    ${req.body.Weight}, ${req.body.Material}, ${req.body.Stackable}, ${req.body.Adjustability}, ${req.body.Ergonomic}, ${req.body.Mechanism}, ${req.body.Lumbar_Support}, 
 		    ${req.body.Compatible_With}, ${req.body.Castors}, ${req.body.Lifting_Capacity}, ${req.body.Max_Load_Weight}, ${req.body.Default_Warranty}, 
 		    ${req.body.AUNZ_CodeID}, ${req.body.Product_AccreditationID}, ${req.body.Test_Certificate_Expiry}

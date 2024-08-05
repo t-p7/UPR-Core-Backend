@@ -48,34 +48,34 @@ router.get("/search", function (req, res, next) {
 		JOIN 
     Delivery_Service_Region_Pricing ON Regions.RegionID = Delivery_Service_Region_Pricing.RegionID`;
 
-	if (req.body.hasOwnProperty('ProductCode') {
-		search = await sql`${select} WHERE Furniture.ProductCode = '${req.body.ProductCode}';`;
+	if (req.body.hasOwnProperty('ProductCode')) {
+		search = sql`${select} WHERE Furniture.ProductCode = '${req.body.ProductCode}';`;
 		res.json({search});
 	}
 
-	else if (req.body.hasOwnProperty('Category_4Name') {
-		search = await sql`${select} WHERE Furniture.Category_4ID = 
+	else if (req.body.hasOwnProperty('Category_4Name')) {
+		search = sql`${select} WHERE Furniture.Category_4ID = 
 			(SELECT Category_4ID FROM Category4 WHERE LOWER(Category4.Category_4Name) LIKE '%${req.body.Category_4}%');`;
 		res.json({search});
 	}
 
-	else if (req.body.hasOwnProperty('Category_3Name') {
-		search = await sql`${select} WHERE Furniture.Category_4ID = 
+	else if (req.body.hasOwnProperty('Category_3Name')) {
+		search = sql`${select} WHERE Furniture.Category_4ID = 
 			(SELECT Category_4ID FROM Category4 WHERE Category4.Category_3ID IN 
 			(SELECT Category3.Category_3ID FROM Category3 WHERE Category_3Name LIKE '%${req.body.Category_3}%');`;
 		res.json({search});
 	}
 
-	else if (req.body.hasOwnProperty('Category_2Name') {
-		search = await sql`${select} WHERE Furniture.Category_4ID = 
+	else if (req.body.hasOwnProperty('Category_2Name')) {
+		search = sql`${select} WHERE Furniture.Category_4ID = 
 			(SELECT Category_4ID FROM Category4 WHERE Category4.Category_3ID IN 
 			(SELECT Category3.Category_3ID FROM Category3 WHERE Category_2ID IN 
 			(SELECT Category2.Category_2 FROM Category WHERE Category_2Name LIKE '%${req.body.Category_2}%'));`;
 		res.json({search});
 	}
 
-	else if (req.body.hasOwnProperty('CategoryName') {
-		search = await sql`${select} WHERE Furniture.Category_4ID = 
+	else if (req.body.hasOwnProperty('CategoryName')) {
+		search = sql`${select} WHERE Furniture.Category_4ID = 
 			(SELECT Category_4ID FROM Category4 WHERE Category4.Category_3ID IN 
 			(SELECT Category3.Category_3ID FROM Category3 WHERE Category3.Category_2ID IN 
 			(SELECT Category2.Category_2ID FROM Category2 WHERE Category2.CategoryID IN
