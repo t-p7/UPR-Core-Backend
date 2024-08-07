@@ -13,7 +13,7 @@ var accountRouter = require('./routes/account');
 
 var app = express();
 
-sql = pg('postgres://admin:admin@localhost:5432/UPR-Core');
+sql = pg('postgres://postgres:admin@localhost:5432/UPR-Core');
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
