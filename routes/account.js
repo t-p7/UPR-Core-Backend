@@ -1,37 +1,31 @@
 var express = require('express');
 var router = express.Router();
+const sql = require('../db'); // Adjust the path as necessary
 
 router.post("/login", async function (req, res) {
+    if (!req.body.hasOwnProperty('username') || !req.body.hasOwnProperty('password')) {
+        res.status(403).json({ message: "No username or password specified" });
+    } else {
+        const { username, password } = req.body;
 
-	if (!req.body.hasOwnProperty('username') || !req.body.hasOwnProperty('password')) {
-		res.status(403);
-		res.json({message: "No username or password specified"});
-	}
+        try {
+            const result = await sql`
+                SELECT "ID" 
+                FROM "Accounts" 
+                WHERE "Username" = ${username} AND "Password" = ${password}
+            `;
 
-	else {
-		var username = req.body.username;
-		var password = req.body.password; 
-		var valid_login = await sql`SELECT a.ID FROM "Accounts" AS a WHERE a."Username" = '${username}' AND a."Password" = '${password}'`;
-	
-		if (valid_login === null || valid_login === "") {
-			res.status(404);
-			res.json({message: "User not found"});
-		}
-	
-		else {
-			res.status(200);
-			res.json({message: "Successful login"});
-		}
-	}
-
-	
-})
-
-/*
-router.get("/testlogin", async function (req, res) {
-	var accounts = await sql`SELECT * FROM "Accounts"`;
-	res.json({accounts}) 
+            if (result.length === 0) {
+                res.status(404).json({ message: "User not found" });
+            } else {
+                res.status(200).json({ message: "Successful login" });
+            }
+        } catch (error) {
+            console.error('Database error:', error);
+            res.status(500).json({ message: "Internal server error" });
+        }
+    }
 });
-*/
 
 module.exports = router;
+
