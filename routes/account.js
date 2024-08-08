@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 
-router.get("/login", async function (req, res) {
+router.post("/login", async function (req, res) {
 
 	if (!req.body.hasOwnProperty('username') || !req.body.hasOwnProperty('password')) {
 		res.status(403);
