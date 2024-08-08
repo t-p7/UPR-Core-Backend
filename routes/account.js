@@ -11,9 +11,9 @@ router.get("/login", async function (req, res) {
 	else {
 		var username = req.body.username;
 		var password = req.body.password; 
-		var valid_login = await sql`SELECT ID FROM "Accounts" WHERE "Username" = ${username} AND "Password" = ${password}`;
+		var valid_login = await sql`SELECT a.ID FROM "Accounts" AS a WHERE a."Username" = '${username}' AND a."Password" = '${password}'`;
 	
-		if (valid_login == null || valid_login == "") {
+		if (valid_login === null || valid_login === "") {
 			res.status(404);
 			res.json({message: "User not found"});
 		}
@@ -27,10 +27,11 @@ router.get("/login", async function (req, res) {
 	
 })
 
-
+/*
 router.get("/testlogin", async function (req, res) {
 	var accounts = await sql`SELECT * FROM "Accounts"`;
 	res.json({accounts}) 
-})
+});
+*/
 
 module.exports = router;
