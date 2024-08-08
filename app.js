@@ -1,10 +1,9 @@
 var createError = require('http-errors');
 var express = require('express');
+const sql = require("./db");
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
-
-const pg = require('postgres');
 
 var indexRouter = require('./routes/index');
 var searchRouter = require('./routes/search');
@@ -13,12 +12,11 @@ var accountRouter = require('./routes/account');
 
 var app = express();
 
-sql = pg('postgres://postgres:admin@localhost:5432/UPR-Core');
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
-app.set('port', 4000)
+app.set('port', 4000);
 
 app.use(logger('dev'));
 app.use(express.json());
@@ -34,6 +32,11 @@ app.use('/', accountRouter);
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));
+});
+
+app.use((req, res, next) =>{
+	sql = pg('postgres://postgres:admin@localhost:5432/UPR-Core');
+	next();
 });
 
 // error handler
