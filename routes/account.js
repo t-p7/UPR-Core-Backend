@@ -26,6 +26,20 @@ router.post("/login", async function (req, res) {
         }
     }
 });
+/*
+router.get("/countrycode", async function (req, res) {
+	countryCount = await sql`SELECT MAX("CountryID") FROM "Countries"`;
+	res.status(200).json({message: countryCount[0].max});
+})
+*/
 
+router.get("/origincheck", async function (req, res) {
+	origin_tables = await sql`SELECT STRING_AGG(COLUMN_NAME, ',')
+		AS COLUMNS
+		FROM INFORMATION_SCHEMA.COLUMNS
+		WHERE TABLE_NAME = 'Origin'`;
+	origin_tables = origin_tables[0].columns.split(',');
+	res.status(200).json({origin_tables});
+}); 
 module.exports = router;
 
