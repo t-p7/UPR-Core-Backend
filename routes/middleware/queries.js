@@ -3,7 +3,7 @@ const sql = require('../../db');
 const queries = {
 	Count : async function(tableName) {
 		
-		idName = this.GetPrimaryKey(tableName);
+		idName = await this.GetPrimaryKey(tableName);
 
 		if (idName.Length === 0) {
 			return null;
@@ -22,7 +22,7 @@ const queries = {
 	},
 
 	Search : async function(tableName, fields) {
-		columns = this.GetColumns(tableName);
+		columns = await this.GetColumns(tableName);
 
 		query = `SELECT * FROM "${tableName}"
 		WHERE `;
@@ -136,8 +136,8 @@ const queries = {
 
 	GetAllInfo : async function(tableName) {
 
-		return [tableName, this.GetPrimaryKey(tableName), 
-		this.GetColumns(tableName), this.Count(tableName)];
+		return [tableName, await this.GetPrimaryKey(tableName), 
+		await this.GetColumns(tableName), await this.Count(tableName)];
 	}
 
 }
