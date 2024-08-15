@@ -1,6 +1,8 @@
 var express = require('express');
 var router = express.Router();
 const sql = require('../db'); // Adjust the path as necessary
+const queries = require('./middleware/queries');
+const Table = require('./middleware/tables');
 
 router.post("/login", async function (req, res) {
     if (!req.body.hasOwnProperty('username') || !req.body.hasOwnProperty('password')) {
@@ -41,5 +43,10 @@ router.get("/origincheck", async function (req, res) {
 	origin_tables = origin_tables[0].columns.split(',');
 	res.status(200).json({origin_tables});
 }); 
+
+router.get("/countrysearchcheck", async function (req, res) {
+    search = await queries.GetColumns("Countries");
+	res.status(200).json({search});
+})
 module.exports = router;
 

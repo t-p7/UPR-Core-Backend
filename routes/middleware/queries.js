@@ -9,7 +9,7 @@ const queries = {
 			return null;
 		}
 
-		count = await sql`SELECT MAX("${idName}") FROM "${tableName}";`;
+		count = await sql`SELECT MAX("${sql.unsafe(idName)}") FROM "${sql.unsafe(tableName)}";`;
 		
 		if (count.Length === 0) {
 			return 1;
@@ -22,21 +22,40 @@ const queries = {
 	},
 
 	Search : async function(tableName, fields) {
+		columns = this.GetColumns(tableName);
+
 		query = `SELECT * FROM "${tableName}"
 		WHERE `;
 
 		for (i = 0; i < fields.Length - 1; i++) {
-			query = query + `"${fields[i]}" in (
-			SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = '${tableName}'
-			) AND `;
+			query = query + `'${fields[i]}' in (`;
+			for (j = 0; j < columns_init.Length - 1; j++) {
+				
+				query = query + `CAST("${tableName}"."${columns[j]}" AS text), `
+
+			}
+
+			query = query + `CAST("${tableName}"."${columns[columns.Length - 1]}" AS text)`
+
+			query = query + `) AND `
 		}
 
-		query = query + `"${fields[fields.Length - 1]}" in 
-		(SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = '${tableName}')`;
+		query = query + ` '${fields[fields.Legnth - 1]}' in (`;
+			for (j = 0; j < columns.Length - 1; j++) {
+				
+				query = query + `CAST("${tableName}"."${columns[j]}" AS text), `
+
+			}
+		query = query + `CAST("${tableName}"."${columns[columns.Length - 1]}" AS text))`
+		
 		
 		query = query + `;`;
 
-		search = sql`${query}`;
+		return query;
+
+		
+
+		search = await sql`${sql.unsafe(query)}`;
 
 		if (search.Length === 0) {
 			return null;
@@ -66,7 +85,7 @@ const queries = {
 		query = query + `${fields[fields.Length - 1]}`;
 		query = query + `);`;
 
-		insert = sql`${query}`;
+		insert = await sql`${sql.unsafe(query)}`;
 
 		if (insert.Length === 0) {
 			return null;
@@ -79,23 +98,30 @@ const queries = {
 	},
 
 	GetColumns : async function(tableName) {
-		query = sql`SELECT STRING_AGG(COLUMN_NAME, ',')
-		AS COLUMNS
+		const query = await sql`SELECT STRING_AGG(COLUMN_NAME, ',') AS COLUMNS
 		FROM INFORMATION_SCHEMA.COLUMNS
-		WHERE TABLE_NAME = '${tableName}'`;
+		WHERE TABLE_NAME = '${sql.unsafe(tableName)}'`;
 
-		columns = query[0].columns.split(",");
+		return query[0].columns.split(",");
+	},
+
+	GetTextColumns : async function(tableName) {
+		query = await sql`SELECT STRING_AGG(COLUMN_NAME, ',') 
+		AS COLUMNS 
+		FROM INFORMATION_SCHEMA.COLUMNS 
+		WHERE TABLE_NAME = '${sql.unsafe(tableName)}' 
+		AND DATA_TYPE = 'text';`
 
 		return query[0].columns.split(",");
 	},
 
 	GetPrimaryKey : async function(tableName) {
-		query = sql`select C.COLUMN_NAME AS column FROM
+		query = await sql`select C.COLUMN_NAME AS column FROM
 			INFORMATION_SCHEMA.TABLE_CONSTRAINTS T
 			JOIN INFORMATION_SCHEMA.CONSTRAINT_COLUMN_USAGE C
 			ON C.CONSTRAINT_NAME=T.CONSTRAINT_NAME
 			WHERE
-			C.TABLE_NAME='${tableName}'
+			C.TABLE_NAME='${sql.unsafe(tableName)}'
 			and T.CONSTRAINT_TYPE='PRIMARY KEY'`;
 
 		if (query.Length === 0) {

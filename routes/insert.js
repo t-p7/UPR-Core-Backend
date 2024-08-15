@@ -7,31 +7,31 @@ const Table = require('./middleware/tables');
 router.post("/insert/furniture", async function (req, res) {
 
 	//Countries
-	countries = new Table(queries.GetAllInfo("Countries"));
+	countries = new Table(await queries.GetAllInfo("Countries"));
 
 	country_id = countries.Count;
-	country_check = queries.Search(countries.TableName, [req.body.Country]);
+	country_check = await queries.Search(countries.TableName, [req.body.Country]);
 
 	if (country_check === null) {
-		queries.Insert(countries.TableName, countries.Columns, [country_id, req.body.country])
+		await queries.Insert(countries.TableName, countries.Columns, [country_id, req.body.country])
 	}
 
 	else {
-		country_id = queries.Search(countries.TableName, [req.body.Country])[0].CountryID;
+		country_id = await queries.Search(countries.TableName, [req.body.Country])[0].CountryID;
 	}
 
 	//Origin
-	origin = new Table(queries.GetAllInfo("Origin"));
+	origin = new Table(await queries.GetAllInfo("Origin"));
 
 	origin_id = origin.Count;
-	origin_check = queries.Search(countries.TableName, [req.body.Origin_of_Imported_Products,
+	origin_check = await queries.Search(countries.TableName, [req.body.Origin_of_Imported_Products,
 		req.body.Australian_Made, req.body.Product_of_Australia,
 		req.body.SME, req.body.Aboriginal_TorresStraitIslander_Content,
 		req.body.Recycled_Content]);
 
 	if (origin_check === null) {
 
-		queries.Insert(origin.TableName, origin.Columns, [origin_id, country_id,
+		await queries.Insert(origin.TableName, origin.Columns, [origin_id, country_id,
 			req.body.Origin_of_Imported_Products,
 			req.body.Australian_Made, req.body.Product_of_Australia,
 			req.body.SME, req.body.Aboriginal_TorresStraitIslander_Content,
@@ -43,14 +43,14 @@ router.post("/insert/furniture", async function (req, res) {
 	}
 	
 	//Manufacturer
-	manufacturer = new Table(queries.GetAllInfo("Manufacturer"));
+	manufacturer = new Table(await queries.GetAllInfo("Manufacturer"));
 
 	manufacturer_id = manufacturer.Count;
 
-	manufacturer_check = queries.Search(manufacturer.TableName, [req.body.Manufacturer]);
+	manufacturer_check = await queries.Search(manufacturer.TableName, [req.body.Manufacturer]);
 
 	if (manufacturer_check === null) {
-		queries.Insert(manufacturer.TableName, manufacturer.Columns, [manufacturer_id, 
+		await queries.Insert(manufacturer.TableName, manufacturer.Columns, [manufacturer_id, 
 			req.body.Manufacturer]);
 	}
 
@@ -59,14 +59,14 @@ router.post("/insert/furniture", async function (req, res) {
 	}
 
 	//Testing Agency
-	testing = new Table(queries.GetAllInfo("Testing_Agency"));
+	testing = new Table(await queries.GetAllInfo("Testing_Agency"));
 
 	testing_id = testing.Count;
 
-	testing_check = queries.Search(testing.TableName, [req.body.Testing_Agency]);
+	testing_check = await queries.Search(testing.TableName, [req.body.Testing_Agency]);
 
 	if (testing_check === null) {
-		queries.Insert(testing.TableName, testing.Columns, [testing_id, 
+		await queries.Insert(testing.TableName, testing.Columns, [testing_id, 
 			req.body.Testing_Agency]);
 	}
 
@@ -75,15 +75,15 @@ router.post("/insert/furniture", async function (req, res) {
 	}
 
 	//Certification
-	certification = new Table(queries.GetAllInfo("Certification"));
+	certification = new Table(await queries.GetAllInfo("Certification"));
 
 	certification_id = certification.Count;
 
-	certification_check = queries.Search(certification.TableName, [req.body.Other_Certificates,
+	certification_check = await queries.Search(certification.TableName, [req.body.Other_Certificates,
 		req.body.E0_Certified, req.body.Timber_Certified, req.body.Other_VOCs_Hazardous_Substances]);
 
 	if (certification_check === null) {
-		queries.Insert(certification.TableName, certification.Columns, [certification_id,
+		await queries.Insert(certification.TableName, certification.Columns, [certification_id,
 			req.body.Other_Certificates, req.body.E0_Certified, req.body.Timber_Certified,
 			req.body.Other_VOCs_Hazardous_Substances]);
 	}
@@ -93,15 +93,15 @@ router.post("/insert/furniture", async function (req, res) {
 	}
 
 	//UPIC
-	upic = new Table(queries.GetAllInfo("UPIC"));
+	upic = new Table(await queries.GetAllInfo("UPIC"));
 
 	upic_id = req.body.UPIC;
 
-	upic_check = queries.Search(upic.TableName, [req.body.UPIC,
+	upic_check = await queries.Search(upic.TableName, [req.body.UPIC,
 		req.body.Inclusions, req.body.Queensland_Made, req.body.Indigenous_Furniture]);
 
 	if (upic_check === null) {
-		queries.Insert(upic.TableName, upic.Columns, [upic_id,
+		await queries.Insert(upic.TableName, upic.Columns, [upic_id,
 			req.body.Inclusions, req.body.Queensland_Made, req.body.Indigenous_Furniture]);
 	}
 
@@ -111,16 +111,16 @@ router.post("/insert/furniture", async function (req, res) {
 
 
 	//Suppliers
-	supplier = new Table(queries.GetAllInfo("Supplier"));
+	supplier = new Table(await queries.GetAllInfo("Supplier"));
 
 	supplier_id = supplier.Count;
 
-	supplier_check = queries.Search(supplier.TableName, [req.body.SupplierName,
+	supplier_check = await queries.Search(supplier.TableName, [req.body.SupplierName,
 		req.body.ABN, req.body.Contact, req.body.Phone, req.body.Mobile,
 		req.body.Mobile, req.body.Email]);
 
 	if (certification_check === null) {
-		queries.Insert(supplier.TableName, supplier.Columns, [supplier_id,
+		await queries.Insert(supplier.TableName, supplier.Columns, [supplier_id,
 			req.body.SupplierName,
 			req.body.ABN, req.body.Contact, req.body.Phone, req.body.Mobile,
 			req.body.Mobile, req.body.Email]);
@@ -132,15 +132,15 @@ router.post("/insert/furniture", async function (req, res) {
 
 
 	//Category
-	category = new Table(queries.GetAllInfo("Category"));
+	category = new Table(await queries.GetAllInfo("Category"));
 
 	category_id = category.Count;
 
-	category_check = queries.Search(category.TableName, [req.body.CategoryName,
+	category_check = await queries.Search(category.TableName, [req.body.CategoryName,
 		req.body.CategoryDescription]);
 
 	if (certification_check === null) {
-		queries.Insert(category.TableName, category.Columns, [category_id,
+		await queries.Insert(category.TableName, category.Columns, [category_id,
 			req.body.CategoryName, req.body.CategoryDescription]);
 	}
 
@@ -150,15 +150,15 @@ router.post("/insert/furniture", async function (req, res) {
 
 
 	//Category2
-	category2 = new Table(queries.GetAllInfo("Category2"));
+	category2 = new Table(await queries.GetAllInfo("Category2"));
 
 	category2_id = category2.Count;
 
-	category2_check = queries.Search(category2.TableName, [req.body.Category_2Name,
-		req.body.Category_2Description, category_d]);
+	category2_check = await queries.Search(category2.TableName, [req.body.Category_2Name,
+		req.body.Category_2Description]);
 
 	if (category2_check === null) {
-		queries.Insert(category2.TableName, category2.Columns, [category2_id,
+		await queries.Insert(category2.TableName, category2.Columns, [category2_id,
 			req.body.Category_2Name, req.body.Category_2Description, category_id]);
 	}
 
@@ -168,15 +168,15 @@ router.post("/insert/furniture", async function (req, res) {
 
 
 	//Category3
-	category3 = new Table(queries.GetAllInfo("Category3"));
+	category3 = new Table(await queries.GetAllInfo("Category3"));
 
 	category3_id = category3.Count;
 
-	category3_check = queries.Search(category3.TableName, [req.body.Category_3Name,
-		req.body.Category_3Description, category2_id]);
+	category3_check = await queries.Search(category3.TableName, [req.body.Category_3Name,
+		req.body.Category_3Description]);
 
 	if (category3_check === null) {
-		queries.Insert(category3.TableName, category3.Columns, [category3_id,
+		await queries.Insert(category3.TableName, category3.Columns, [category3_id,
 			req.body.Category_3Name, req.body.Category_3Description, category2_id]);
 	}
 
@@ -185,15 +185,15 @@ router.post("/insert/furniture", async function (req, res) {
 	}
 
 	//Category4
-	category4 = new Table(queries.GetAllInfo("Category4"));
+	category4 = new Table(await queries.GetAllInfo("Category4"));
 
 	category4_id = category4.Count;
 
-	category4_check = queries.Search(category4.TableName, [req.body.Category_4Name,
+	category4_check = await queries.Search(category4.TableName, [req.body.Category_4Name,
 		req.body.Category_4Description, category3_id]);
 
 	if (category3_check === null) {
-		queries.Insert(category4.TableName, category4.Columns, [category4_id,
+		await queries.Insert(category4.TableName, category4.Columns, [category4_id,
 			req.body.Category_4Name, req.body.Category_4Description, category3_id]);
 	}
 
@@ -203,14 +203,14 @@ router.post("/insert/furniture", async function (req, res) {
 
 
 	//Colours
-	colours = new Table(queries.GetAllInfo("Colours"));
+	colours = new Table(await queries.GetAllInfo("Colours"));
 
 	colours_id = colours.Count;
 
-	colours_check = queries.Search(colours.TableName, [req.body.Colours]);
+	colours_check = await queries.Search(colours.TableName, [req.body.Colours]);
 
 	if (colours_check === null) {
-		queries.Insert(colours.TableName, colours.Columns, [colours_id,
+		await queries.Insert(colours.TableName, colours.Columns, [colours_id,
 			req.body.Colours]);
 	}
 
@@ -220,14 +220,14 @@ router.post("/insert/furniture", async function (req, res) {
 
 
 	//AU/NZ Code
-	aunzcode = new Table(queries.GetAllInfo("AU/NZ_Code"));
+	aunzcode = new Table(await queries.GetAllInfo("AU/NZ_Code"));
 
 	aunzcode_id = aunzcode.Count;
 
-	aunzcode_check = queries.Search(aunzcode.TableName, [req.body.AUNZ_Code]);
+	aunzcode_check = await queries.Search(aunzcode.TableName, [req.body.AUNZ_Code]);
 
 	if (aunzcode_check === null) {
-		queries.Insert(aunzcode.TableName, aunzcode.Columns, [aunzcode_id,
+		await queries.Insert(aunzcode.TableName, aunzcode.Columns, [aunzcode_id,
 			req.body.AUNZ_Code]);
 	}
 
@@ -237,14 +237,14 @@ router.post("/insert/furniture", async function (req, res) {
 
 
 	//Product Accreditation
-	accredit = new Table(queries.GetAllInfo("Product_Accreditation"));
+	accredit = new Table(await queries.GetAllInfo("Product_Accreditation"));
 
 	accredit_id = accredit.Count;
 
-	accredit_check = queries.Search(accredit.TableName, [req.body.Accreditation_Scheme]);
+	accredit_check = await queries.Search(accredit.TableName, [req.body.Accreditation_Scheme]);
 
 	if (accredit_check === null) {
-		queries.Insert(accredit.TableName, accredit.Columns, [accredit_id,
+		await queries.Insert(accredit.TableName, accredit.Columns, [accredit_id,
 			req.body.Accreditation_Scheme]);
 	}
 
@@ -253,18 +253,18 @@ router.post("/insert/furniture", async function (req, res) {
 	}
 
 	//Tier Pricing
-	tier = new Table(queries.GetAllInfo("Tier_Pricing_&_Quality"));
+	tier = new Table(await queries.GetAllInfo("Tier_Pricing_&_Quality"));
 
 	tier_id = tier.Count;
 
-	tier_check = queries.Search(tier.TableName, [req.body.Tier1_Price,
+	tier_check = await queries.Search(tier.TableName, [req.body.Tier1_Price,
 		req.body.Tier1_Quantity, req.body.Tier2_Price, req.body.Tier2_Quantity,
 		req.body.Tier3_Price, req.body.Tier3_Quantity, req.body.Tier4_Price,
 		req.body.Tier4_Quantity, req.body.Tier5_Price, req.body.Tier5_Quantity
 		]);
 
 	if (tier_check === null) {
-		queries.Insert(tier.TableName, tier.Columns, [tier_id,
+		await queries.Insert(tier.TableName, tier.Columns, [tier_id,
 			req.body.Tier1_Price,
 			req.body.Tier1_Quantity, req.body.Tier2_Price, req.body.Tier2_Quantity,
 			req.body.Tier3_Price, req.body.Tier3_Quantity, req.body.Tier4_Price,
@@ -276,11 +276,11 @@ router.post("/insert/furniture", async function (req, res) {
 	}
 
 	//Details
-	details = new Table(queries.GetAllInfo("Details"));
+	details = new Table(await queries.GetAllInfo("Details"));
 
 	details_id = details.Count;
 
-	details_check = queries.Search(details.TableName, [colour_id,
+	details_check = await queries.Search(details.TableName, [colour_id,
 		req.body.Assembly_Required, req.body.Height, req.body.Width,
 		req.body.Depth, req.body.Weight, req.body.Material,
 		req.body.Stackable, req.body.Adjustability, req.body.Ergonomic,
@@ -289,7 +289,7 @@ router.post("/insert/furniture", async function (req, res) {
 		req.body.Default_Warranty, aunzcode_id, accredit_id, req.body.Test_Certificate_Expiry]);
 
 	if (details_check === null) {
-		queries.Insert(details.TableName, details.Columns, [details_id,
+		await queries.Insert(details.TableName, details.Columns, [details_id,
 			colour_id,
 			req.body.Assembly_Required, req.body.Height, req.body.Width,
 			req.body.Depth, req.body.Weight, req.body.Material,
@@ -304,17 +304,17 @@ router.post("/insert/furniture", async function (req, res) {
 	}
 
 	//Furniture	
-	furniture = new Table(queries.GetAllInfo("Furniture"));
+	furniture = new Table(await queries.GetAllInfo("Furniture"));
 
 	furniture_id = furniture.Count;
 
-	furniture_check = queries.Search(furniture.TableName, [req.body.ProductCode,
+	furniture_check = await queries.Search(furniture.TableName, [req.body.ProductCode,
 		category4_id, supplier_id, origin_id, req.body.Generic_Description,
 		req.body.Long_Description, req.body.Unit_Price, req.body.MSRP_Price,
 		upic_id, manufacturer_id, testing_id, certification_id, details_id, tier_id]);
 
 	if (furniture_check === null) {
-		queries.Insert(furniture.TableName, furniture.Columns, [furniture_id,
+		await queries.Insert(furniture.TableName, furniture.Columns, [furniture_id,
 			req.body.ProductCode,
 			category4_id, supplier_id, origin_id, req.body.Generic_Description,
 			req.body.Long_Description, req.body.Unit_Price, req.body.MSRP_Price,
@@ -327,7 +327,7 @@ router.post("/insert/furniture", async function (req, res) {
 
 
 	//Regions
-	region = new Table(queries.GetAllInfo("Regions"));
+	region = new Table(await queries.GetAllInfo("Regions"));
 
 	regions_list = [];
 
@@ -338,10 +338,10 @@ router.post("/insert/furniture", async function (req, res) {
 	region_id_list = [];
 
 	for (i = 0; i < regions_list.Length; i++) {
-		region_check = queries.Search(region.TableName, [regions_list[i]]);
+		region_check = await queries.Search(region.TableName, [regions_list[i]]);
 		
 		if (region_check === null) {
-		queries.Insert(region.TableName, region.Columns, [region_id,
+		await queries.Insert(region.TableName, region.Columns, [region_id,
 			regions_list[i]]);
 			region_id_list.push(region.Count);
 			region.Count++;
@@ -353,10 +353,10 @@ router.post("/insert/furniture", async function (req, res) {
 	} 
 
 	//Delivery & Service Region Pricing
-	serviceregion = new Table(queries.GetAllInfo("Delivery_&_Service_Region_Pricing"));
+	serviceregion = new Table(await queries.GetAllInfo("Delivery_&_Service_Region_Pricing"));
 
 	for (i = 0; i < req.body.ServiceRegion.Length; i ++) {
-		queries.insert(serviceregion.TableName, serviceregion.Columns, [region_id_list[i],
+		await queries.insert(serviceregion.TableName, serviceregion.Columns, [region_id_list[i],
 			req.body.ServiceRegion[i].FISDTTDIP, req.body.ServiceRegion[i].Price, 
 			serviceregion.Count, serviceregion.Count
 			]);
@@ -365,10 +365,10 @@ router.post("/insert/furniture", async function (req, res) {
 
 
 	//Specification
-	specification = new Table(queries.GetAllInfo("Specification"));
+	specification = new Table(await queries.GetAllInfo("Specification"));
 
 	for (i = 0; i < req.body.Specification.Length; i++) {
-		queries.insert(specification.TableName, specification.Columns,
+		await queries.insert(specification.TableName, specification.Columns,
 			[specification.Count, req.body.Specification[i].SpecificationName,
 			req.body.Specification[i].SpecificationDescription, 
 			furniture_id, req.body.Specification[i].Prerequisites,
