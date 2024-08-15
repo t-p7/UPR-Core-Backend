@@ -106,7 +106,7 @@ const queries = {
 			return query[0].column;
 		}
 		
-	}
+	},
 
 	GetAllInfo : async function(tableName) {
 
