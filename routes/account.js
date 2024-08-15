@@ -35,6 +35,7 @@ router.get("/countrycode", async function (req, res) {
 })
 */
 
+/*
 router.get("/origincheck", async function (req, res) {
 	origin_tables = await sql`SELECT STRING_AGG(COLUMN_NAME, ',')
 		AS COLUMNS
@@ -45,8 +46,15 @@ router.get("/origincheck", async function (req, res) {
 }); 
 
 router.get("/countrysearchcheck", async function (req, res) {
-    search = await queries.GetColumns("Countries");
+    search = await queries.Search("Countries", ["Australia"]);
 	res.status(200).json({search});
-})
+});
+
+router.get("/countryinsertcheck", async function (req, res) {
+    search = await queries.Insert("Countries", ["CountryID", "CountryName"], 
+        ["2", "NewZealand"]);
+    res.status(200).json({search});
+});
+*/
 module.exports = router;
 

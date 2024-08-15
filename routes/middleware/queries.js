@@ -5,13 +5,13 @@ const queries = {
 		
 		idName = await this.GetPrimaryKey(tableName);
 
-		if (idName.Length === 0) {
+		if (idName.length === 0) {
 			return null;
 		}
 
 		count = await sql`SELECT MAX("${sql.unsafe(idName)}") FROM "${sql.unsafe(tableName)}";`;
 		
-		if (count.Length === 0) {
+		if (count.length === 0) {
 			return 1;
 		}
 
@@ -27,37 +27,36 @@ const queries = {
 		query = `SELECT * FROM "${tableName}"
 		WHERE `;
 
-		for (i = 0; i < fields.Length - 1; i++) {
+		for (i = 0; i < fields.length - 1; i++) {
 			query = query + `'${fields[i]}' in (`;
-			for (j = 0; j < columns_init.Length - 1; j++) {
+			for (j = 0; j < columns.length - 1; j++) {
 				
 				query = query + `CAST("${tableName}"."${columns[j]}" AS text), `
 
 			}
 
-			query = query + `CAST("${tableName}"."${columns[columns.Length - 1]}" AS text)`
+			query = query + `CAST("${tableName}"."${columns[columns.length - 1]}" AS text)`
 
 			query = query + `) AND `
 		}
 
-		query = query + ` '${fields[fields.Legnth - 1]}' in (`;
-			for (j = 0; j < columns.Length - 1; j++) {
+		query = query + ` '${fields[fields.length - 1]}' in (`;
+			for (j = 0; j < columns.length - 1; j++) {
 				
 				query = query + `CAST("${tableName}"."${columns[j]}" AS text), `
 
 			}
-		query = query + `CAST("${tableName}"."${columns[columns.Length - 1]}" AS text))`
+		query = query + `CAST("${tableName}"."${columns[columns.length - 1]}" AS text))`
 		
 		
 		query = query + `;`;
 
-		return query;
+		init_query = query.toString();
 
-		
 
-		search = await sql`${sql.unsafe(query)}`;
+		search = await sql`${sql.unsafe(init_query)}`;
 
-		if (search.Length === 0) {
+		if (search.length === 0) {
 			return null;
 		}
 
@@ -68,26 +67,50 @@ const queries = {
 
 	Insert : async function(tableName, columns, fields) {
 
-		query = `INSERT INTO ${tableName} (`;
+		column_types = await sql`SELECT STRING_AGG(DATA_TYPE, ',') AS COLUMN_TYPES
+		FROM INFORMATION_SCHEMA.COLUMNS
+		WHERE TABLE_NAME = '${sql.unsafe(tableName)}'`;
 
-		for (i = 0; i < columns.Length - 1; i++) {
+
+		column_types = column_types[0].column_types.toString().split(",");
+		
+		query = `INSERT INTO "${tableName}" (`;
+
+		for (i = 0; i < columns.length - 1; i++) {
 			query = query + `"${columns[0]}",`;
 		}
 
-		query = query + `"${columns[columns.Length - 1]}"`;
+		query = query + `"${columns[columns.length - 1]}"`;
 
 		query = query + `) VALUES (`;
 
-		for (i = 0; i < fields.Length - 1; i++) {
-			query = query + `${fields[i]}, `;
+		for (i = 0; i < fields.length - 1; i++) {
+			if (column_types[i] === "text") {
+				query = query + `'${fields[i]}', `;
+			}
+
+			else {
+				query = query + `${fields[i]}, `;
+			}
+			
 		}
 
-		query = query + `${fields[fields.Length - 1]}`;
+		if (column_types[fields.length - 1] === "text") {
+				query = query + `'${fields[fields.length - 1]}'`;
+			}
+
+		else {
+			query = query + `${fields[fields.length - 1]}`;
+		}
+
 		query = query + `);`;
 
-		insert = await sql`${sql.unsafe(query)}`;
+		init_query = query.toString();
 
-		if (insert.Length === 0) {
+
+		insert = await sql`${sql.unsafe(init_query)}`;
+
+		if (insert.length === 0) {
 			return null;
 		}
 
@@ -124,7 +147,7 @@ const queries = {
 			C.TABLE_NAME='${sql.unsafe(tableName)}'
 			and T.CONSTRAINT_TYPE='PRIMARY KEY'`;
 
-		if (query.Length === 0) {
+		if (query.length === 0) {
 			return null;
 		}
 
