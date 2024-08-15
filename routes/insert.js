@@ -350,45 +350,32 @@ router.post("/insert/furniture", async function (req, res) {
 		else {
 			region_id_list.push(region_check[0].RegionID);
 		}
-	}
+	} 
 
 	//Delivery & Service Region Pricing
 	serviceregion = new Table(queries.GetAllInfo("Delivery_&_Service_Region_Pricing"));
 
-	certification_id = certification.Count;
-
-	certification_check = queries.Search(certification.TableName, [req.body.Other_Certificates,
-		req.body.E0_Certified, req.body.Timber_Certified, req.body.Other_VOCs_Hazardous_Substances]);
-
-	if (certification_check === null) {
-		queries.Insert(certification.TableName, certification.Columns, [certification_id,
-			req.body.Other_Certificates, req.body.E0_Certified, req.body.Timber_Certified,
-			req.body.Other_VOCs_Hazardous_Substances]);
+	for (i = 0; i < req.body.ServiceRegion.Length; i ++) {
+		queries.insert(serviceregion.TableName, serviceregion.Columns, [region_id_list[i],
+			req.body.ServiceRegion[i].FISDTTDIP, req.body.ServiceRegion[i].Price, 
+			serviceregion.Count, serviceregion.Count
+			]);
+		serviceregion.Count++;
 	}
 
-	else {
-		certification_id = certification_check[0].certification_check;
-	}
 
 	//Specification
 	specification = new Table(queries.GetAllInfo("Specification"));
 
-	certification_id = certification.Count;
+	for (i = 0; i < req.body.Specification.Length; i++) {
+		queries.insert(specification.TableName, specification.Columns,
+			[specification.Count, req.body.Specification[i].SpecificationName,
+			req.body.Specification[i].SpecificationDescription, 
+			furniture_id, req.body.Specification[i].Prerequisites,
+			req.body.Specification[i].Antirequisites]);
 
-	certification_check = queries.Search(certification.TableName, [req.body.Other_Certificates,
-		req.body.E0_Certified, req.body.Timber_Certified, req.body.Other_VOCs_Hazardous_Substances]);
-
-	if (certification_check === null) {
-		queries.Insert(certification.TableName, certification.Columns, [certification_id,
-			req.body.Other_Certificates, req.body.E0_Certified, req.body.Timber_Certified,
-			req.body.Other_VOCs_Hazardous_Substances]);
+		specification.Count++;
 	}
-
-	else {
-		certification_id = certification_check[0].certification_check;
-	}
-
-
 
 }); 
 
