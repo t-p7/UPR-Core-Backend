@@ -77,7 +77,7 @@ const queries = {
 		query = `INSERT INTO "${tableName}" (`;
 
 		for (i = 0; i < columns.length - 1; i++) {
-			query = query + `"${columns[0]}",`;
+			query = query + `"${columns[i]}",`;
 		}
 
 		query = query + `"${columns[columns.length - 1]}"`;
@@ -106,7 +106,6 @@ const queries = {
 		query = query + `);`;
 
 		init_query = query.toString();
-
 
 		insert = await sql`${sql.unsafe(init_query)}`;
 

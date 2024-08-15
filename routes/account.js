@@ -35,7 +35,7 @@ router.get("/countrycode", async function (req, res) {
 })
 */
 
-/*
+
 router.get("/origincheck", async function (req, res) {
 	origin_tables = await sql`SELECT STRING_AGG(COLUMN_NAME, ',')
 		AS COLUMNS
@@ -51,10 +51,13 @@ router.get("/countrysearchcheck", async function (req, res) {
 });
 
 router.get("/countryinsertcheck", async function (req, res) {
-    search = await queries.Insert("Countries", ["CountryID", "CountryName"], 
-        ["2", "NewZealand"]);
+    search = await queries.Insert("Origin", ["OriginID", "CountryID", 
+        "Origin_of_Imported_Products", "Australian_Made",
+        "Product_of_Australia", "SME", "Aboriginal_TorresStraitIslander_Content",
+        "Recycled_Content"], 
+        ["2", "1", "AU", "Bu", "Y", "SMH", "N", "Y"]);
     res.status(200).json({search});
 });
-*/
+
 module.exports = router;
 
