@@ -121,7 +121,8 @@ const queries = {
 	},
 
 	GetColumns : async function(tableName) {
-		const query = await sql`SELECT STRING_AGG(COLUMN_NAME, ',') AS COLUMNS
+		const query = await sql`SELECT STRING_AGG(COLUMN_NAME, ','  ORDER BY ORDINAL_POSITION ASC) 
+		AS COLUMNS
 		FROM INFORMATION_SCHEMA.COLUMNS
 		WHERE TABLE_NAME = '${sql.unsafe(tableName)}'`;
 
@@ -129,7 +130,7 @@ const queries = {
 	},
 
 	GetTextColumns : async function(tableName) {
-		query = await sql`SELECT STRING_AGG(COLUMN_NAME, ',') 
+		query = await sql`SELECT STRING_AGG(COLUMN_NAME, ','  ORDER BY ORDINAL_POSITION ASC) 
 		AS COLUMNS 
 		FROM INFORMATION_SCHEMA.COLUMNS 
 		WHERE TABLE_NAME = '${sql.unsafe(tableName)}' 
