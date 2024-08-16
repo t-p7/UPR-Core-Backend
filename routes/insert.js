@@ -13,7 +13,7 @@ router.post("/insert/furniture", async function (req, res) {
 	country_check = await queries.Search(countries.TableName, [req.body.Country]);
 
 	if (country_check === null) {
-		await queries.Insert(countries.TableName, countries.Columns, [country_id, req.body.country])
+		await queries.Insert(countries.TableName, countries.Columns, [country_id, req.body.Country])
 	}
 
 	else {
