@@ -17,7 +17,7 @@ router.post("/insert/furniture", async function (req, res) {
 	}
 
 	else {
-		country_id = await queries.Search(countries.TableName, [req.body.Country])[0].CountryID;
+		country_id = country_check[0].CountryID;
 	}
 
 	//Origin
