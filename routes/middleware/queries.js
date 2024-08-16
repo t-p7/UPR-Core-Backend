@@ -67,7 +67,8 @@ const queries = {
 
 	Insert : async function(tableName, columns, fields) {
 
-		column_types = await sql`SELECT STRING_AGG(DATA_TYPE, ',') AS COLUMN_TYPES
+		column_types = await sql`SELECT STRING_AGG(DATA_TYPE, ',' ORDER BY ORDINAL_POSITION ASC) 
+		AS COLUMN_TYPES
 		FROM INFORMATION_SCHEMA.COLUMNS
 		WHERE TABLE_NAME = '${sql.unsafe(tableName)}'`;
 

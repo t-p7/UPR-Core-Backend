@@ -59,5 +59,12 @@ router.get("/countryinsertcheck", async function (req, res) {
     res.status(200).json({search});
 });
 
+router.get("/categorycheck", async function (req, res) {
+    search = await queries.Insert("Category2", ["Category_2ID",
+        "Category_2Name", "Category_2Description", "CategoryID"],
+        ["2", "Bro", "Bro", "1"]);
+    res.status(200).json({search});
+})
+
 module.exports = router;
 
