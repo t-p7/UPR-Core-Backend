@@ -337,7 +337,7 @@ router.post("/insert/furniture", async function (req, res) {
 
 	region_id_list = [];
 
-	for (i = 0; i < regions_list.Length; i++) {
+	for (i = 0; i < regions_list.length; i++) {
 		region_check = await queries.Search(region.TableName, [regions_list[i]]);
 		
 		if (region_check === null) {
@@ -355,7 +355,7 @@ router.post("/insert/furniture", async function (req, res) {
 	//Delivery & Service Region Pricing
 	serviceregion = new Table(await queries.GetAllInfo("Delivery_&_Service_Region_Pricing"));
 
-	for (i = 0; i < req.body.ServiceRegion.Length; i ++) {
+	for (i = 0; i < req.body.ServiceRegion.length; i ++) {
 		await queries.insert(serviceregion.TableName, serviceregion.Columns, [region_id_list[i],
 			req.body.ServiceRegion[i].FISDTTDIP, req.body.ServiceRegion[i].Price, 
 			serviceregion.Count, serviceregion.Count
@@ -367,7 +367,7 @@ router.post("/insert/furniture", async function (req, res) {
 	//Specification
 	specification = new Table(await queries.GetAllInfo("Specification"));
 
-	for (i = 0; i < req.body.Specification.Length; i++) {
+	for (i = 0; i < req.body.Specification.length; i++) {
 		await queries.insert(specification.TableName, specification.Columns,
 			[specification.Count, req.body.Specification[i].SpecificationName,
 			req.body.Specification[i].SpecificationDescription, 
