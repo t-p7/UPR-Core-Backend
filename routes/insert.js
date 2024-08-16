@@ -354,8 +354,6 @@ router.post("/insert/furniture", async function (req, res) {
 
 	//Delivery & Service Region Pricing
 	serviceregion = new Table(await queries.GetAllInfo("Delivery_&_Service_Region_Pricing"));
-
-	req.body.ServiceRegion = JSON.parse(req.body.ServiceRegion);
 	
 	for (i = 0; i < req.body.ServiceRegion.length; i ++) {
 		await queries.insert(serviceregion.TableName, serviceregion.Columns, [region_id_list[i],
@@ -368,8 +366,6 @@ router.post("/insert/furniture", async function (req, res) {
 
 	//Specification
 	specification = new Table(await queries.GetAllInfo("Specification"));
-
-	req.body.Specification = JSON.parse(req.body.Specification);
 
 	for (i = 0; i < req.body.Specification.length; i++) {
 		await queries.insert(specification.TableName, specification.Columns,
