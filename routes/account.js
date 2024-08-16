@@ -14,7 +14,7 @@ router.post("/login", async function (req, res) {
             const result = await sql`
                 SELECT "ID" 
                 FROM "Accounts" 
-                WHERE "Username" = '${sql.unsafe(username)}' AND "Password" = '${sql.unsafe(sqlpassword)}'
+                WHERE "Username" = '${sql.unsafe(username)}' AND "Password" = '${sql.unsafe(password)}'
             `;
 
             if (result.length === 0) {
