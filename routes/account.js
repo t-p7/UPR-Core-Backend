@@ -14,7 +14,7 @@ router.post("/login", async function (req, res) {
             const result = await sql`
                 SELECT "ID" 
                 FROM "Accounts" 
-                WHERE "Username" = '${sql.unsafe(username)}' AND "Password" = '${sql.unsafe(password)}'
+                WHERE "Username" = '${sql.unsafe(username)}' AND "Password" = '${sql.unsafe(password)}';
             `;
 
             if (result.length === 0) {
@@ -35,7 +35,7 @@ router.get("/countrycode", async function (req, res) {
 })
 */
 
-
+/*
 router.get("/origincheck", async function (req, res) {
 	origin_tables = await sql`SELECT STRING_AGG(COLUMN_NAME, ',')
 		AS COLUMNS
@@ -59,12 +59,25 @@ router.get("/countryinsertcheck", async function (req, res) {
     res.status(200).json({search});
 });
 
+router.get("/furnitureinsertcheck", async function (req, res) {
+    search = await queries.Insert("Furniture", await queries.GetColumns("Furniture"), 
+        ["6", "1", "1", "1", "2", "Good", "Even Gooder", "12", "13",
+        "UPIC", "1", "1", "1", "1", "1"]);
+    res.status(200).json({search});
+});
+
+
 router.get("/categorycheck", async function (req, res) {
     search = await queries.Insert("Category2", ["Category_2ID",
         "Category_2Name", "Category_2Description", "CategoryID"],
         ["2", "Bro", "Bro", "1"]);
     res.status(200).json({search});
-})
+});
 
+router.get("/getcolumnscheck", async function (req, res) {
+    search = await queries.GetColumns("Category4");
+    res.status(200).json({search});
+})
+*/
 module.exports = router;
 

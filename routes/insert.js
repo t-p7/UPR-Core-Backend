@@ -89,7 +89,7 @@ router.post("/insert/furniture", async function (req, res) {
 	}
 
 	else {
-		certification_id = certification_check[0].certification_check;
+		certification_id = certification_check[0].CertificationID;
 	}
 
 	//UPIC
@@ -253,7 +253,7 @@ router.post("/insert/furniture", async function (req, res) {
 	}
 
 	//Tier Pricing
-	tier = new Table(await queries.GetAllInfo("Tier_Pricing_&_Quality"));
+	tier = new Table(await queries.GetAllInfo("Tier_Pricing_&_Quantity"));
 
 	tier_id = tier.Count;
 
@@ -280,7 +280,7 @@ router.post("/insert/furniture", async function (req, res) {
 
 	details_id = details.Count;
 
-	details_check = await queries.Search(details.TableName, [colour_id,
+	details_check = await queries.Search(details.TableName, [colours_id,
 		req.body.Assembly_Required, req.body.Height, req.body.Width,
 		req.body.Depth, req.body.Weight, req.body.Material,
 		req.body.Stackable, req.body.Adjustability, req.body.Ergonomic,
@@ -290,7 +290,7 @@ router.post("/insert/furniture", async function (req, res) {
 
 	if (details_check === null) {
 		await queries.Insert(details.TableName, details.Columns, [details_id,
-			colour_id,
+			colours_id,
 			req.body.Assembly_Required, req.body.Height, req.body.Width,
 			req.body.Depth, req.body.Weight, req.body.Material,
 			req.body.Stackable, req.body.Adjustability, req.body.Ergonomic,
@@ -355,6 +355,8 @@ router.post("/insert/furniture", async function (req, res) {
 	//Delivery & Service Region Pricing
 	serviceregion = new Table(await queries.GetAllInfo("Delivery_&_Service_Region_Pricing"));
 
+	req.body.ServiceRegion = JSON.parse(req.body.ServiceRegion);
+	
 	for (i = 0; i < req.body.ServiceRegion.length; i ++) {
 		await queries.insert(serviceregion.TableName, serviceregion.Columns, [region_id_list[i],
 			req.body.ServiceRegion[i].FISDTTDIP, req.body.ServiceRegion[i].Price, 
@@ -366,6 +368,8 @@ router.post("/insert/furniture", async function (req, res) {
 
 	//Specification
 	specification = new Table(await queries.GetAllInfo("Specification"));
+
+	req.body.Specification = JSON.parse(req.body.Specification);
 
 	for (i = 0; i < req.body.Specification.length; i++) {
 		await queries.insert(specification.TableName, specification.Columns,
