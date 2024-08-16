@@ -106,7 +106,7 @@ router.post("/insert/furniture", async function (req, res) {
 	}
 
 	else {
-		upic_id = certification_check[0].UPIC;
+		upic_id = upic_check[0].UPIC;
 	}
 
 
@@ -119,7 +119,7 @@ router.post("/insert/furniture", async function (req, res) {
 		req.body.ABN, req.body.Contact, req.body.Phone, req.body.Mobile,
 		req.body.Mobile, req.body.Email]);
 
-	if (certification_check === null) {
+	if (supplier_check === null) {
 		await queries.Insert(supplier.TableName, supplier.Columns, [supplier_id,
 			req.body.SupplierName,
 			req.body.ABN, req.body.Contact, req.body.Phone, req.body.Mobile,
@@ -139,7 +139,7 @@ router.post("/insert/furniture", async function (req, res) {
 	category_check = await queries.Search(category.TableName, [req.body.CategoryName,
 		req.body.CategoryDescription]);
 
-	if (certification_check === null) {
+	if (category_check === null) {
 		await queries.Insert(category.TableName, category.Columns, [category_id,
 			req.body.CategoryName, req.body.CategoryDescription]);
 	}
@@ -163,7 +163,7 @@ router.post("/insert/furniture", async function (req, res) {
 	}
 
 	else {
-		category_2id = category2_check[0].Category_2ID;
+		category2_id = category2_check[0].Category_2ID;
 	}
 
 
@@ -181,7 +181,7 @@ router.post("/insert/furniture", async function (req, res) {
 	}
 
 	else {
-		category4_id = category3_check[0].Category_3ID;
+		category3_id = category3_check[0].Category_3ID;
 	}
 
 	//Category4
@@ -249,7 +249,7 @@ router.post("/insert/furniture", async function (req, res) {
 	}
 
 	else {
-		accredit_id = certification_check[0].Product_AccreditationID;
+		accredit_id = accredit_check[0].Product_AccreditationID;
 	}
 
 	//Tier Pricing
