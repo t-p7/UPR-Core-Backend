@@ -332,7 +332,7 @@ router.post("/insert/furniture", async function (req, res) {
 	regions_list = [];
 
 	for (i = 0; i < req.body.ServiceRegions; i++) {
-		regions_list.push(req.body.ServiceRegions[i].RegionName);
+		regions_list.push(req.body.ServiceRegions[i].box1);
 	}
 
 	region_id_list = [];
@@ -341,7 +341,7 @@ router.post("/insert/furniture", async function (req, res) {
 		region_check = await queries.Search(region.TableName, [regions_list[i]]);
 		
 		if (region_check === null) {
-		await queries.Insert(region.TableName, region.Columns, [region_id,
+			await queries.Insert(region.TableName, region.Columns, [region.Count,
 			regions_list[i]]);
 			region_id_list.push(region.Count);
 			region.Count++;
@@ -355,10 +355,10 @@ router.post("/insert/furniture", async function (req, res) {
 	//Delivery & Service Region Pricing
 	serviceregion = new Table(await queries.GetAllInfo("Delivery_&_Service_Region_Pricing"));
 	
-	for (i = 0; i < req.body.ServiceRegion.length; i ++) {
-		await queries.insert(serviceregion.TableName, serviceregion.Columns, [region_id_list[i],
-			req.body.ServiceRegion[i].FISDTTDIP, req.body.ServiceRegion[i].Price, 
-			serviceregion.Count, serviceregion.Count
+	for (i = 0; i < req.body.ServiceRegions.length; i ++) {
+		await queries.Insert(serviceregion.TableName, serviceregion.Columns, [region_id_list[i],
+			req.body.ServiceRegions[i].box2, req.body.ServiceRegions[i].box3, 
+			serviceregion.Count, furniture_id
 			]);
 		serviceregion.Count++;
 	}
@@ -368,11 +368,11 @@ router.post("/insert/furniture", async function (req, res) {
 	specification = new Table(await queries.GetAllInfo("Specification"));
 
 	for (i = 0; i < req.body.Specification.length; i++) {
-		await queries.insert(specification.TableName, specification.Columns,
-			[specification.Count, req.body.Specification[i].SpecificationName,
-			req.body.Specification[i].SpecificationDescription, 
-			furniture_id, req.body.Specification[i].Prerequisites,
-			req.body.Specification[i].Antirequisites]);
+		await queries.Insert(specification.TableName, specification.Columns,
+			[specification.Count, req.body.Specification[i].box1,
+			req.body.Specification[i].box2, 
+			furniture_id, req.body.Specification[i].box3,
+			req.body.Specification[i].box4]);
 
 		specification.Count++;
 	}
