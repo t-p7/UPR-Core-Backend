@@ -337,14 +337,13 @@ router.post("/insert/furniture", async function (req, res) {
 
 	region_id_list = [];
 
-	for (i = 0; i < regions_list.length; i++) {
+	for (let i = 0; i < regions_list.length; i++) {
 		region_check = await queries.Search(region.TableName, [regions_list[i]]);
 		
 		if (region_check === null) {
-			await queries.Insert(region.TableName, region.Columns, [region.Count,
+			await queries.Insert(region.TableName, region.Columns, [region.Count + i,
 			regions_list[i]]);
-			region_id_list.push(region.Count);
-			region.Count++;
+			region_id_list.push(region.Count + i);
 		}
 	
 		else {
@@ -355,26 +354,26 @@ router.post("/insert/furniture", async function (req, res) {
 	//Delivery & Service Region Pricing
 	serviceregion = new Table(await queries.GetAllInfo("Delivery_&_Service_Region_Pricing"));
 	
-	for (i = 0; i < req.body.ServiceRegions.length; i ++) {
+	for (let i = 0; i < req.body.ServiceRegions.length; i++) {
 		await queries.Insert(serviceregion.TableName, serviceregion.Columns, [region_id_list[i],
 			req.body.ServiceRegions[i].box2, req.body.ServiceRegions[i].box3, 
 			serviceregion.Count, furniture_id
 			]);
-		serviceregion.Count++;
+		serviceregion.AddCount();
 	}
 
 
 	//Specification
 	specification = new Table(await queries.GetAllInfo("Specification"));
 
-	for (i = 0; i < req.body.Specification.length; i++) {
+	for (let i = 0; i < req.body.Specification.length; i++) {
 		await queries.Insert(specification.TableName, specification.Columns,
 			[specification.Count, req.body.Specification[i].box1,
 			req.body.Specification[i].box2, 
 			furniture_id, req.body.Specification[i].box3,
 			req.body.Specification[i].box4]);
 
-		specification.Count++;
+		specification.AddCount();
 	}
 
 }); 
