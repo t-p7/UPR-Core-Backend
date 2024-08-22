@@ -331,7 +331,7 @@ router.post("/insert/furniture", async function (req, res) {
 
 	regions_list = [];
 
-	for (i = 0; i < req.body.ServiceRegions; i++) {
+	for (i = 0; i < req.body.ServiceRegions.length; i++) {
 		regions_list.push(req.body.ServiceRegions[i].box1);
 	}
 
