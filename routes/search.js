@@ -60,14 +60,14 @@ router.post("/search/general", async function (req, res) {
 
 	else if (req.body.hasOwnProperty('Category_4Name')) {
 		search = sql`${sql.unsafe(select)} WHERE "Furniture"."Category_4ID" = 
-			(SELECT "Category_4ID" FROM "Category4" WHERE LOWER("Category4"."Category_4Name") LIKE '%${sql.unsafe(req.body.Category_4)}%');`;
+			(SELECT "Category_4ID" FROM "Category4" WHERE LOWER("Category4"."Category_4Name") LIKE '%${sql.unsafe(req.body.Category_4Name)}%');`;
 		res.json({search});
 	}
 
 	else if (req.body.hasOwnProperty('Category_3Name')) {
 		search = sql`${sql.unsafe(select)} WHERE "Furniture"."Category_4ID" = 
 			(SELECT "Category_4ID" FROM "Category4" WHERE "Category4"."Category_3ID" IN 
-			(SELECT "Category3"."Category_3ID" FROM "Category3" WHERE "Category_3Name" LIKE '%${sql.unsafe(req.body.Category_3)}%');`;
+			(SELECT "Category3"."Category_3ID" FROM "Category3" WHERE "Category_3Name" LIKE '%${sql.unsafe(req.body.Category_3Name)}%');`;
 		res.json({search});
 	}
 
@@ -75,7 +75,7 @@ router.post("/search/general", async function (req, res) {
 		search = sql`${sql.unsafe(select)} WHERE "Furniture"."Category_4ID" = 
 			(SELECT "Category_4ID" FROM "Category4" WHERE "Category4"."Category_3ID" IN 
 			(SELECT "Category3"."Category_3ID" FROM "Category3" WHERE "Category_2ID" IN 
-			(SELECT "Category2"."Category_2" FROM "Category" WHERE "Category_2Name" LIKE '%${sql.unsafe(req.body.Category_2)}%'));`;
+			(SELECT "Category2"."Category_2" FROM "Category" WHERE "Category_2Name" LIKE '%${sql.unsafe(req.body.Category_2Name)}%'));`;
 		res.json({search});
 	}
 
@@ -84,7 +84,7 @@ router.post("/search/general", async function (req, res) {
 			(SELECT "Category_4ID" FROM "Category4" WHERE "Category4"."Category_3ID" IN 
 			(SELECT "Category3"."Category_3ID" FROM "Category3" WHERE "Category3"."Category_2ID" IN 
 			(SELECT "Category2"."Category_2ID" FROM "Category2" WHERE "Category2"."CategoryID" IN
-			(SELECT "Category"."CategoryID" FROM "Category" WHERE "Category"."CategoryName" LIKE '%${sql.unsafe(req.body.Category)}%')));`;
+			(SELECT "Category"."CategoryID" FROM "Category" WHERE "Category"."CategoryName" LIKE '%${sql.unsafe(req.body.CategoryName)}%')));`;
 		res.json({search});
 	}
 
