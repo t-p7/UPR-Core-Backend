@@ -58,7 +58,7 @@ router.post("/search/general", async function (req, res) {
 	
 });
 
-router.post("search/:id", async function (req, res) {
+router.get("search/:id", async function (req, res) {
 	const search = await sql`SELECT 
     	* 
 		FROM 
