@@ -80,9 +80,7 @@ router.post("search/:id", async function (req, res) {
 		JOIN 
 		    "Product_Accreditation" ON "Details"."Product_AccreditationID" = "Product_Accreditation"."Product_AccreditationID"
 		JOIN 
-		    "Certification" ON "Furniture"."FurnitureID" = "Certification"."FurnitureID"
-		JOIN 
-		    "Specification" ON "Furniture"."FurnitureID" = "Specification"."FurnitureID"
+		    "Certification" ON "Furniture"."CertificationID" = "Certification"."CertificationID"
 		JOIN 
 		    "Countries" ON "Origin"."CountryID" = "Countries"."CountryID"
 		JOIN 
@@ -92,22 +90,22 @@ router.post("search/:id", async function (req, res) {
 		JOIN 
 		    "Category2" ON "Category3"."Category_2ID" = "Category2"."Category_2ID"
 		JOIN 
-		    "Category" ON Category2.CategoryID = Category.CategoryID
+		    "Category" ON "Category2"."CategoryID" = "Category"."CategoryID"
 		JOIN 
 		    "UPIC" ON "Furniture"."UPIC" = "UPIC"."UPIC"
 		JOIN 
-		    "Tier_Pricing_Quantity" ON "Furniture"."TierID" = "Tier_Pricing_Quantity"."TierID"
+		    "Tier_Pricing_&_Quantity" ON "Furniture"."TierID" = "Tier_Pricing_&_Quantity"."TierID"
     WHERE "Furniture"."FurnitureID" = ${sql.unsafe(req.params.id)};`;
 
     const region_pricing = await sql`
     SELECT * FROM "Delivery_&_Service_Region_Pricing"
     JOIN "Regions" ON "Delivery_&_Service_Region_Pricing"."RegionID" = "Regions"."RegionID" 
-    WHERE "Delivery_&_Service_Region_Pricing"."FurnitureID" = ${sql.unsafe(search.FurnitureID)}
+    WHERE "Delivery_&_Service_Region_Pricing"."FurnitureID" = ${sql.unsafe(req.params.id)}
     `;
 
     const specification = await sql`
     SELECT * FROM "Specification"
-    WHERE "Specification"."FurnitureID" = ${sql.unsafe(search.FurnitureID)}
+    WHERE "Specification"."FurnitureID" = ${sql.unsafe(req.params.id)}
     `;
 
     if (search.length === 0) {
