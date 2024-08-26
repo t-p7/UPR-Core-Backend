@@ -31,7 +31,7 @@ router.post("/search/general", async function (req, res) {
 	else if (req.body.hasOwnProperty('Category_3Name')) {
 		search = await sql`${sql.unsafe(select)} WHERE "Furniture"."Category_4ID" = 
 			(SELECT "Category_4ID" FROM "Category4" WHERE "Category4"."Category_3ID" IN 
-			(SELECT "Category3"."Category_3ID" FROM "Category3" WHERE "Category_3Name" LIKE '%${sql.unsafe(req.body.Category_3Name)}%');`;
+			(SELECT "Category3"."Category_3ID" FROM "Category3" WHERE "Category_3Name" LIKE '%${sql.unsafe(req.body.Category_3Name)}%'));`;
 		res.json({search});
 	}
 
@@ -39,7 +39,7 @@ router.post("/search/general", async function (req, res) {
 		search = await sql`${sql.unsafe(select)} WHERE "Furniture"."Category_4ID" = 
 			(SELECT "Category_4ID" FROM "Category4" WHERE "Category4"."Category_3ID" IN 
 			(SELECT "Category3"."Category_3ID" FROM "Category3" WHERE "Category_2ID" IN 
-			(SELECT "Category2"."Category_2" FROM "Category" WHERE "Category_2Name" LIKE '%${sql.unsafe(req.body.Category_2Name)}%'));`;
+			(SELECT "Category2"."Category_2" FROM "Category" WHERE "Category_2Name" LIKE '%${sql.unsafe(req.body.Category_2Name)}%')));`;
 		res.json({search});
 	}
 
@@ -48,7 +48,7 @@ router.post("/search/general", async function (req, res) {
 			(SELECT "Category_4ID" FROM "Category4" WHERE "Category4"."Category_3ID" IN 
 			(SELECT "Category3"."Category_3ID" FROM "Category3" WHERE "Category3"."Category_2ID" IN 
 			(SELECT "Category2"."Category_2ID" FROM "Category2" WHERE "Category2"."CategoryID" IN
-			(SELECT "Category"."CategoryID" FROM "Category" WHERE "Category"."CategoryName" LIKE '%${sql.unsafe(req.body.CategoryName)}%')));`;
+			(SELECT "Category"."CategoryID" FROM "Category" WHERE "Category"."CategoryName" LIKE '%${sql.unsafe(req.body.CategoryName)}%'))));`;
 		res.json({search});
 	}
 
