@@ -58,7 +58,7 @@ router.post("/search/general", async function (req, res) {
 	
 });
 
-router.get("search/:id", async function (req, res) {
+router.get("/search/:id", async function (req, res) {
 	const search = await sql`SELECT 
     	* 
 		FROM 
@@ -116,6 +116,6 @@ router.get("search/:id", async function (req, res) {
     	res.status(200).json({search, region_pricing, specification});
     }
 
-})
+});
 
 module.exports = router;
