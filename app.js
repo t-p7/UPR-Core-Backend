@@ -70,6 +70,7 @@ var indexRouter = require('./routes/index');
 var searchRouter = require('./routes/search');
 var insertRouter = require('./routes/insert');
 var accountRouter = require('./routes/account');
+var csvRouter = require('./routes/csv');
 
 var app = express();
 
@@ -95,6 +96,7 @@ app.use('/', indexRouter);
 app.use('/', searchRouter);
 app.use('/', insertRouter);
 app.use('/', accountRouter);
+app.use('/', csvRouter)
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
