@@ -5,7 +5,7 @@ const queries = require('./middleware/queries');
 const Table = require('./middleware/tables');
 
 
-router.post("/insert/furniture", async function (req, res) {
+router.post("/insert/spreadsheet", async function (req, res) {
 
 	for (let i = 0; i < req.body.length; i++) {
 		//Countries
