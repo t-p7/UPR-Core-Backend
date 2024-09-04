@@ -363,20 +363,7 @@ router.post("/insert/spreadsheet", async function (req, res) {
 				]);
 			serviceregion.AddCount();
 		}
-	
-	
-		//Specification
-		specification = new Table(await queries.GetAllInfo("Specification"));
-	
-		for (let i = 0; i < req.body[i].Specification.length; i++) {
-			await queries.Insert(specification.TableName, specification.Columns,
-				[specification.Count, req.body[i].Specification[i].box1,
-				req.body[i].Specification[i].box2, 
-				furniture_id, req.body[i].Specification[i].box3,
-				req.body[i].Specification[i].box4]);
-	
-			specification.AddCount();
-		}
+
 	}
 
 	
