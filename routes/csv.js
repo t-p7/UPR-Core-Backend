@@ -7,15 +7,17 @@ const Table = require('./middleware/tables');
 
 router.post("/insert/spreadsheet", async function (req, res) {
 
-	for (let i = 0; i < req.body.length; i++) {
+	const information = req.body;
+
+	for (let i = 0; i < information.length; i++) {
 		//Countries
 		countries = new Table(await queries.GetAllInfo("Countries"));
 	
 		country_id = countries.Count;
-		country_check = await queries.Search(countries.TableName, [req.body[i].Country]);
+		country_check = await queries.Search(countries.TableName, [information[i].Country]);
 	
 		if (country_check === null) {
-			await queries.Insert(countries.TableName, countries.Columns, [country_id, req.body[i].Country])
+			await queries.Insert(countries.TableName, countries.Columns, [country_id, information[i].Country])
 		}
 	
 		else {
@@ -26,18 +28,18 @@ router.post("/insert/spreadsheet", async function (req, res) {
 		origin = new Table(await queries.GetAllInfo("Origin"));
 	
 		origin_id = origin.Count;
-		origin_check = await queries.Search(countries.TableName, [req.body[i].Origin_of_Imported_Products,
-			req.body[i].Australian_Made, req.body[i].Product_of_Australia,
-			req.body[i].SME, req.body[i].Aboriginal_TorresStraitIslander_Content,
-			req.body[i].Recycled_Content]);
+		origin_check = await queries.Search(countries.TableName, [information[i].Origin_of_Imported_Products,
+			information[i].Australian_Made, information[i].Product_of_Australia,
+			information[i].SME, information[i].Aboriginal_TorresStraitIslander_Content,
+			information[i].Recycled_Content]);
 	
 		if (origin_check === null) {
 	
 			await queries.Insert(origin.TableName, origin.Columns, [origin_id, country_id,
-				req.body[i].Origin_of_Imported_Products,
-				req.body[i].Australian_Made, req.body[i].Product_of_Australia,
-				req.body[i].SME, req.body[i].Aboriginal_TorresStraitIslander_Content,
-				req.body[i].Recycled_Content]);
+				information[i].Origin_of_Imported_Products,
+				information[i].Australian_Made, information[i].Product_of_Australia,
+				information[i].SME, information[i].Aboriginal_TorresStraitIslander_Content,
+				information[i].Recycled_Content]);
 		}
 	
 		else {
@@ -49,11 +51,11 @@ router.post("/insert/spreadsheet", async function (req, res) {
 	
 		manufacturer_id = manufacturer.Count;
 	
-		manufacturer_check = await queries.Search(manufacturer.TableName, [req.body[i].Manufacturer]);
+		manufacturer_check = await queries.Search(manufacturer.TableName, [information[i].Manufacturer]);
 	
 		if (manufacturer_check === null) {
 			await queries.Insert(manufacturer.TableName, manufacturer.Columns, [manufacturer_id, 
-				req.body[i].Manufacturer]);
+				information[i].Manufacturer]);
 		}
 	
 		else {
@@ -65,11 +67,11 @@ router.post("/insert/spreadsheet", async function (req, res) {
 	
 		testing_id = testing.Count;
 	
-		testing_check = await queries.Search(testing.TableName, [req.body[i].Testing_Agency]);
+		testing_check = await queries.Search(testing.TableName, [information[i].Testing_Agency]);
 	
 		if (testing_check === null) {
 			await queries.Insert(testing.TableName, testing.Columns, [testing_id, 
-				req.body[i].Testing_Agency]);
+				information[i].Testing_Agency]);
 		}
 	
 		else {
@@ -81,13 +83,13 @@ router.post("/insert/spreadsheet", async function (req, res) {
 	
 		certification_id = certification.Count;
 	
-		certification_check = await queries.Search(certification.TableName, [req.body[i].Other_Certificates,
-			req.body[i].E0_Certified, req.body[i].Timber_Certified, req.body[i].Other_VOCs_Hazardous_Substances]);
+		certification_check = await queries.Search(certification.TableName, [information[i].Other_Certificates,
+			information[i].E0_Certified, information[i].Timber_Certified, information[i].Other_VOCs_Hazardous_Substances]);
 	
 		if (certification_check === null) {
 			await queries.Insert(certification.TableName, certification.Columns, [certification_id,
-				req.body[i].Other_Certificates, req.body[i].E0_Certified, req.body[i].Timber_Certified,
-				req.body[i].Other_VOCs_Hazardous_Substances]);
+				information[i].Other_Certificates, information[i].E0_Certified, information[i].Timber_Certified,
+				information[i].Other_VOCs_Hazardous_Substances]);
 		}
 	
 		else {
@@ -97,14 +99,14 @@ router.post("/insert/spreadsheet", async function (req, res) {
 		//UPIC
 		upic = new Table(await queries.GetAllInfo("UPIC"));
 	
-		upic_id = req.body[i].UPIC;
+		upic_id = information[i].UPIC;
 	
-		upic_check = await queries.Search(upic.TableName, [req.body[i].UPIC,
-			req.body[i].Inclusions, req.body[i].Queensland_Made, req.body[i].Indigenous_Furniture]);
+		upic_check = await queries.Search(upic.TableName, [information[i].UPIC,
+			information[i].Inclusions, information[i].Queensland_Made, information[i].Indigenous_Furniture]);
 	
 		if (upic_check === null) {
 			await queries.Insert(upic.TableName, upic.Columns, [upic_id,
-				req.body[i].Inclusions, req.body[i].Queensland_Made, req.body[i].Indigenous_Furniture]);
+				information[i].Inclusions, information[i].Queensland_Made, information[i].Indigenous_Furniture]);
 		}
 	
 		else {
@@ -117,15 +119,15 @@ router.post("/insert/spreadsheet", async function (req, res) {
 	
 		supplier_id = supplier.Count;
 	
-		supplier_check = await queries.Search(supplier.TableName, [req.body[i].SupplierName,
-			req.body[i].ABN, req.body[i].Contact, req.body[i].Phone, req.body[i].Mobile,
-			req.body[i].Mobile, req.body[i].Email]);
+		supplier_check = await queries.Search(supplier.TableName, [information[i].SupplierName,
+			information[i].ABN, information[i].Contact, information[i].Phone, information[i].Mobile,
+			information[i].Mobile, information[i].Email]);
 	
 		if (supplier_check === null) {
 			await queries.Insert(supplier.TableName, supplier.Columns, [supplier_id,
-				req.body[i].SupplierName,
-				req.body[i].ABN, req.body[i].Contact, req.body[i].Phone, req.body[i].Mobile,
-				req.body[i].Mobile, req.body[i].Email]);
+				information[i].SupplierName,
+				information[i].ABN, information[i].Contact, information[i].Phone, information[i].Mobile,
+				information[i].Mobile, information[i].Email]);
 		}
 	
 		else {
@@ -138,12 +140,12 @@ router.post("/insert/spreadsheet", async function (req, res) {
 	
 		category_id = category.Count;
 	
-		category_check = await queries.Search(category.TableName, [req.body[i].CategoryName,
-			req.body[i].CategoryDescription]);
+		category_check = await queries.Search(category.TableName, [information[i].CategoryName,
+			information[i].CategoryDescription]);
 	
 		if (category_check === null) {
 			await queries.Insert(category.TableName, category.Columns, [category_id,
-				req.body[i].CategoryName, req.body[i].CategoryDescription]);
+				information[i].CategoryName, information[i].CategoryDescription]);
 		}
 	
 		else {
@@ -156,12 +158,12 @@ router.post("/insert/spreadsheet", async function (req, res) {
 	
 		category2_id = category2.Count;
 	
-		category2_check = await queries.Search(category2.TableName, [req.body[i].Category_2Name,
-			req.body[i].Category_2Description]);
+		category2_check = await queries.Search(category2.TableName, [information[i].Category_2Name,
+			information[i].Category_2Description]);
 	
 		if (category2_check === null) {
 			await queries.Insert(category2.TableName, category2.Columns, [category2_id,
-				req.body[i].Category_2Name, req.body[i].Category_2Description, category_id]);
+				information[i].Category_2Name, information[i].Category_2Description, category_id]);
 		}
 	
 		else {
@@ -174,12 +176,12 @@ router.post("/insert/spreadsheet", async function (req, res) {
 	
 		category3_id = category3.Count;
 	
-		category3_check = await queries.Search(category3.TableName, [req.body[i].Category_3Name,
-			req.body[i].Category_3Description]);
+		category3_check = await queries.Search(category3.TableName, [information[i].Category_3Name,
+			information[i].Category_3Description]);
 	
 		if (category3_check === null) {
 			await queries.Insert(category3.TableName, category3.Columns, [category3_id,
-				req.body[i].Category_3Name, req.body[i].Category_3Description, category2_id]);
+				information[i].Category_3Name, information[i].Category_3Description, category2_id]);
 		}
 	
 		else {
@@ -191,12 +193,12 @@ router.post("/insert/spreadsheet", async function (req, res) {
 	
 		category4_id = category4.Count;
 	
-		category4_check = await queries.Search(category4.TableName, [req.body[i].Category_4Name,
-			req.body[i].Category_4Description, category3_id]);
+		category4_check = await queries.Search(category4.TableName, [information[i].Category_4Name,
+			information[i].Category_4Description, category3_id]);
 	
 		if (category3_check === null) {
 			await queries.Insert(category4.TableName, category4.Columns, [category4_id,
-				req.body[i].Category_4Name, req.body[i].Category_4Description, category3_id]);
+				information[i].Category_4Name, information[i].Category_4Description, category3_id]);
 		}
 	
 		else {
@@ -209,11 +211,11 @@ router.post("/insert/spreadsheet", async function (req, res) {
 	
 		colours_id = colours.Count;
 	
-		colours_check = await queries.Search(colours.TableName, [req.body[i].Colours]);
+		colours_check = await queries.Search(colours.TableName, [information[i].Colours]);
 	
 		if (colours_check === null) {
 			await queries.Insert(colours.TableName, colours.Columns, [colours_id,
-				req.body[i].Colours]);
+				information[i].Colours]);
 		}
 	
 		else {
@@ -226,11 +228,11 @@ router.post("/insert/spreadsheet", async function (req, res) {
 	
 		aunzcode_id = aunzcode.Count;
 	
-		aunzcode_check = await queries.Search(aunzcode.TableName, [req.body[i].AUNZ_Code]);
+		aunzcode_check = await queries.Search(aunzcode.TableName, [information[i].AUNZ_Code]);
 	
 		if (aunzcode_check === null) {
 			await queries.Insert(aunzcode.TableName, aunzcode.Columns, [aunzcode_id,
-				req.body[i].AUNZ_Code]);
+				information[i].AUNZ_Code]);
 		}
 	
 		else {
@@ -243,11 +245,11 @@ router.post("/insert/spreadsheet", async function (req, res) {
 	
 		accredit_id = accredit.Count;
 	
-		accredit_check = await queries.Search(accredit.TableName, [req.body[i].Accreditation_Scheme]);
+		accredit_check = await queries.Search(accredit.TableName, [information[i].Accreditation_Scheme]);
 	
 		if (accredit_check === null) {
 			await queries.Insert(accredit.TableName, accredit.Columns, [accredit_id,
-				req.body[i].Accreditation_Scheme]);
+				information[i].Accreditation_Scheme]);
 		}
 	
 		else {
@@ -259,18 +261,18 @@ router.post("/insert/spreadsheet", async function (req, res) {
 	
 		tier_id = tier.Count;
 	
-		tier_check = await queries.Search(tier.TableName, [req.body[i].Tier1_Price,
-			req.body[i].Tier1_Quantity, req.body[i].Tier2_Price, req.body[i].Tier2_Quantity,
-			req.body[i].Tier3_Price, req.body[i].Tier3_Quantity, req.body[i].Tier4_Price,
-			req.body[i].Tier4_Quantity, req.body[i].Tier5_Price, req.body[i].Tier5_Quantity
+		tier_check = await queries.Search(tier.TableName, [information[i].Tier1_Price,
+			information[i].Tier1_Quantity, information[i].Tier2_Price, information[i].Tier2_Quantity,
+			information[i].Tier3_Price, information[i].Tier3_Quantity, information[i].Tier4_Price,
+			information[i].Tier4_Quantity, information[i].Tier5_Price, information[i].Tier5_Quantity
 			]);
 	
 		if (tier_check === null) {
 			await queries.Insert(tier.TableName, tier.Columns, [tier_id,
-				req.body[i].Tier1_Price,
-				req.body[i].Tier1_Quantity, req.body[i].Tier2_Price, req.body[i].Tier2_Quantity,
-				req.body[i].Tier3_Price, req.body[i].Tier3_Quantity, req.body[i].Tier4_Price,
-				req.body[i].Tier4_Quantity, req.body[i].Tier5_Price, req.body[i].Tier5_Quantity]);
+				information[i].Tier1_Price,
+				information[i].Tier1_Quantity, information[i].Tier2_Price, information[i].Tier2_Quantity,
+				information[i].Tier3_Price, information[i].Tier3_Quantity, information[i].Tier4_Price,
+				information[i].Tier4_Quantity, information[i].Tier5_Price, information[i].Tier5_Quantity]);
 		}
 	
 		else {
@@ -283,22 +285,22 @@ router.post("/insert/spreadsheet", async function (req, res) {
 		details_id = details.Count;
 	
 		details_check = await queries.Search(details.TableName, [colours_id,
-			req.body[i].Assembly_Required, req.body[i].Height, req.body[i].Width,
-			req.body[i].Depth, req.body[i].Weight, req.body[i].Material,
-			req.body[i].Stackable, req.body[i].Adjustability, req.body[i].Ergonomic,
-			req.body[i].Mechanism, req.body[i].Lumbar_Support, req.body[i].Compatible_With,
-			req.body[i].Castors, req.body[i].Lifting_Capacity, req.body[i].Max_Load_Weight,
-			req.body[i].Default_Warranty, aunzcode_id, accredit_id, req.body[i].Test_Certificate_Expiry]);
+			information[i].Assembly_Required, information[i].Height, information[i].Width,
+			information[i].Depth, information[i].Weight, information[i].Material,
+			information[i].Stackable, information[i].Adjustability, information[i].Ergonomic,
+			information[i].Mechanism, information[i].Lumbar_Support, information[i].Compatible_With,
+			information[i].Castors, information[i].Lifting_Capacity, information[i].Max_Load_Weight,
+			information[i].Default_Warranty, aunzcode_id, accredit_id, information[i].Test_Certificate_Expiry]);
 	
 		if (details_check === null) {
 			await queries.Insert(details.TableName, details.Columns, [details_id,
 				colours_id,
-				req.body[i].Assembly_Required, req.body[i].Height, req.body[i].Width,
-				req.body[i].Depth, req.body[i].Weight, req.body[i].Material,
-				req.body[i].Stackable, req.body[i].Adjustability, req.body[i].Ergonomic,
-				req.body[i].Mechanism, req.body[i].Lumbar_Support, req.body[i].Compatible_With,
-				req.body[i].Castors, req.body[i].Lifting_Capacity, req.body[i].Max_Load_Weight,
-				req.body[i].Default_Warranty, aunzcode_id, accredit_id, req.body[i].Test_Certificate_Expiry]);
+				information[i].Assembly_Required, information[i].Height, information[i].Width,
+				information[i].Depth, information[i].Weight, information[i].Material,
+				information[i].Stackable, information[i].Adjustability, information[i].Ergonomic,
+				information[i].Mechanism, information[i].Lumbar_Support, information[i].Compatible_With,
+				information[i].Castors, information[i].Lifting_Capacity, information[i].Max_Load_Weight,
+				information[i].Default_Warranty, aunzcode_id, accredit_id, information[i].Test_Certificate_Expiry]);
 		}
 	
 		else {
@@ -310,16 +312,16 @@ router.post("/insert/spreadsheet", async function (req, res) {
 	
 		furniture_id = furniture.Count;
 	
-		furniture_check = await queries.Search(furniture.TableName, [req.body[i].ProductCode,
-			category4_id, supplier_id, origin_id, req.body[i].Generic_Description,
-			req.body[i].Long_Description, req.body[i].Unit_Price, req.body[i].MSRP_Price,
+		furniture_check = await queries.Search(furniture.TableName, [information[i].ProductCode,
+			category4_id, supplier_id, origin_id, information[i].Generic_Description,
+			information[i].Long_Description, information[i].Unit_Price, information[i].MSRP_Price,
 			upic_id, manufacturer_id, testing_id, certification_id, details_id, tier_id]);
 	
 		if (furniture_check === null) {
 			await queries.Insert(furniture.TableName, furniture.Columns, [furniture_id,
-				req.body[i].ProductCode,
-				category4_id, supplier_id, origin_id, req.body[i].Generic_Description,
-				req.body[i].Long_Description, req.body[i].Unit_Price, req.body[i].MSRP_Price,
+				information[i].ProductCode,
+				category4_id, supplier_id, origin_id, information[i].Generic_Description,
+				information[i].Long_Description, information[i].Unit_Price, information[i].MSRP_Price,
 				upic_id, manufacturer_id, testing_id, certification_id, details_id, tier_id]);
 		}
 	
@@ -333,8 +335,8 @@ router.post("/insert/spreadsheet", async function (req, res) {
 	
 		regions_list = [];
 	
-		for (i = 0; i < req.body[i].ServiceRegions.length; i++) {
-			regions_list.push(req.body[i].ServiceRegions[i].box1);
+		for (i = 0; i < information[i].ServiceRegions.length; i++) {
+			regions_list.push(information[i].ServiceRegions[i].box1);
 		}
 	
 		region_id_list = [];
@@ -356,17 +358,15 @@ router.post("/insert/spreadsheet", async function (req, res) {
 		//Delivery & Service Region Pricing
 		serviceregion = new Table(await queries.GetAllInfo("Delivery_&_Service_Region_Pricing"));
 		
-		for (let i = 0; i < req.body[i].ServiceRegions.length; i++) {
+		for (let i = 0; i < information[i].ServiceRegions.length; i++) {
 			await queries.Insert(serviceregion.TableName, serviceregion.Columns, [region_id_list[i],
-				req.body[i].ServiceRegions[i].box2, req.body[i].ServiceRegions[i].box3, 
+				information[i].ServiceRegions[i].box2, information[i].ServiceRegions[i].box3, 
 				serviceregion.Count, furniture_id
 				]);
 			serviceregion.AddCount();
 		}
 
 	}
-
-	
 
 }); 
 
