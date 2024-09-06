@@ -376,6 +376,16 @@ router.post("/insert/furniture", async function (req, res) {
 		specification.AddCount();
 	}
 
+	//External Link
+	external_links = new Table(await queries.GetAllInfo("External_Links"));
+
+	await queries.Insert(external_links.TableName, external_links.Columns,
+		[external_links.Count, req.body.Thumbnail, req.body.PrimaryImage,
+		req.body.Additional_Image, req.body.Additional_Image2, req.body.Additional_Image3, 
+		req.body.Additional_Image4, req.body.Additional_Image5, req.body.Further_Document1,
+		req.body.Further_Document1Label, req.body.Further_Document2,
+		req.body.Further_Document2Label, furniture_id]);
+
 }); 
 
 

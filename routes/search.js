@@ -95,6 +95,8 @@ router.get("/search/:id", async function (req, res) {
 		    "UPIC" ON "Furniture"."UPIC" = "UPIC"."UPIC"
 		JOIN 
 		    "Tier_Pricing_&_Quantity" ON "Furniture"."TierID" = "Tier_Pricing_&_Quantity"."TierID"
+		JOIN
+    		"External_Links" ON "Furniture"."FurnitureID" = "External_Links"."FurnitureID"
     WHERE "Furniture"."FurnitureID" = ${sql.unsafe(req.params.id)};`;
 
     const region_pricing = await sql`
