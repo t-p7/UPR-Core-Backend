@@ -6,7 +6,7 @@ router.post("/search/general", async function (req, res) {
 	var select = `SELECT 
         "Furniture"."FurnitureID", "Furniture"."ProductCode", "Supplier"."SupplierName",
         "Origin"."Origin_of_Imported_Products", "UPIC"."UPIC", "Furniture"."Unit_Price",
-        "Furniture"."MSRP_Price"
+        "Furniture"."MSRP_Price", "External_Links"."Thumbnail"
         FROM 
             "Furniture"
         JOIN 
@@ -15,6 +15,8 @@ router.post("/search/general", async function (req, res) {
             "Origin" ON "Furniture"."OriginID" = "Origin"."OriginID"
         JOIN 
             "UPIC" ON "Furniture"."UPIC" = "UPIC"."UPIC"
+        JOIN
+    		"External_Links" ON "Furniture"."FurnitureID" = "External_Links"."FurnitureID"
         `;
 
 	if (req.body.hasOwnProperty('ProductCode')) {
