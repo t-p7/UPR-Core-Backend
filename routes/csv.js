@@ -297,7 +297,7 @@ router.post("/insert/spreadsheet", async function (req, res) {
 			await queries.GetNumber(depth), await queries.GetNumber(req.body[i].Weight), req.body[i].Material,
 			req.body[i].Stackable, req.body[i].Adjustability, req.body[i].Ergonomic,
 			req.body[i].Mechanism, req.body[i].Lumbar_Support, req.body[i].Compatible_With,
-			req.body[i].Castors, await queries.GetNumber(req.body[i].Lifting_Capacity), await queries.GetNumber(req.body[i].Max_Load_Weight_,
+			req.body[i].Castors, await queries.GetNumber(req.body[i].Lifting_Capacity), await queries.GetNumber(req.body[i].Max_Load_Weight),
 			req.body[i].Default_Warranty, aunzcode_id, accredit_id, req.body[i].Test_Certificate_Expiry]);
 
 		if (details_check === null) {

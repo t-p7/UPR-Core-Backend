@@ -289,7 +289,7 @@ router.post("/insert/furniture", async function (req, res) {
 		await queries.GetNumber(req.body.Depth), await queries.GetNumber(req.body.Weight), req.body.Material,
 		req.body.Stackable, req.body.Adjustability, req.body.Ergonomic,
 		req.body.Mechanism, req.body.Lumbar_Support, req.body.Compatible_With,
-		req.body.Castors, await queries.GetNumber(req.body.Lifting_Capacity), await queries.GetNumber(req.body.Max_Load_Weight_,
+		req.body.Castors, await queries.GetNumber(req.body.Lifting_Capacity), await queries.GetNumber(req.body.Max_Load_Weight),
 		req.body.Default_Warranty, aunzcode_id, accredit_id, req.body.Test_Certificate_Expiry]);
 
 	if (details_check === null) {
