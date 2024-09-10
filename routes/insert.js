@@ -257,18 +257,22 @@ router.post("/insert/furniture", async function (req, res) {
 
 	tier_id = tier.Count;
 
-	tier_check = await queries.Search(tier.TableName, [req.body.Tier1_Price,
-		req.body.Tier1_Quantity, req.body.Tier2_Price, req.body.Tier2_Quantity,
-		req.body.Tier3_Price, req.body.Tier3_Quantity, req.body.Tier4_Price,
-		req.body.Tier4_Quantity, req.body.Tier5_Price, req.body.Tier5_Quantity
+	tier_check = await queries.Search(tier.TableName, [await queries.GetNumber(req.body.Tier1_Price),
+		await queries.GetInt(req.body.Tier1_Quantity), await queries.GetNumber(req.body.Tier2_Price), 
+		await queries.GetInt(req.body.Tier2_Quantity), await queries.GetNumber(req.body.Tier3_Price), 
+		await queries.GetInt(req.body.Tier3_Quantity), await queries.GetNumber(req.body.Tier4_Price),
+		await queries.GetInt(req.body.Tier4_Quantity), await queries.GetNumber(req.body.Tier5_Price), 
+		await queries.GetInt(req.body.Tier5_Quantity)
 		]);
 
 	if (tier_check === null) {
 		await queries.Insert(tier.TableName, tier.Columns, [tier_id,
-			req.body.Tier1_Price,
-			req.body.Tier1_Quantity, req.body.Tier2_Price, req.body.Tier2_Quantity,
-			req.body.Tier3_Price, req.body.Tier3_Quantity, req.body.Tier4_Price,
-			req.body.Tier4_Quantity, req.body.Tier5_Price, req.body.Tier5_Quantity]);
+			await queries.GetNumber(req.body.Tier1_Price),
+			await queries.GetInt(req.body.Tier1_Quantity), await queries.GetNumber(req.body.Tier2_Price), 
+			await queries.GetInt(req.body.Tier2_Quantity), await queries.GetNumber(req.body.Tier3_Price), 
+			await queries.GetInt(req.body.Tier3_Quantity), await queries.GetNumber(req.body.Tier4_Price),
+			await queries.GetInt(req.body.Tier4_Quantity), await queries.GetNumber(req.body.Tier5_Price), 
+			await queries.GetInt(req.body.Tier5_Quantity)]);
 	}
 
 	else {
@@ -281,21 +285,22 @@ router.post("/insert/furniture", async function (req, res) {
 	details_id = details.Count;
 
 	details_check = await queries.Search(details.TableName, [colours_id,
-		req.body.Assembly_Required, req.body.Height, req.body.Width,
-		req.body.Depth, req.body.Weight, req.body.Material,
+		req.body.Assembly_Required, await queries.GetNumber(req.body.Height), await queries.GetNumber(req.body.Width),
+		await queries.GetNumber(req.body.Depth), await queries.GetNumber(req.body.Weight), req.body.Material,
 		req.body.Stackable, req.body.Adjustability, req.body.Ergonomic,
 		req.body.Mechanism, req.body.Lumbar_Support, req.body.Compatible_With,
-		req.body.Castors, req.body.Lifting_Capacity, req.body.Max_Load_Weight,
+		req.body.Castors, await queries.GetNumber(req.body.Lifting_Capacity), await queries.GetNumber(req.body.Max_Load_Weight_,
 		req.body.Default_Warranty, aunzcode_id, accredit_id, req.body.Test_Certificate_Expiry]);
 
 	if (details_check === null) {
 		await queries.Insert(details.TableName, details.Columns, [details_id,
 			colours_id,
-			req.body.Assembly_Required, req.body.Height, req.body.Width,
-			req.body.Depth, req.body.Weight, req.body.Material,
+			req.body.Assembly_Required, await queries.GetNumber(req.body.Height), await queries.GetNumber(req.body.Width),
+			await queries.GetNumber(req.body.Depth), await queries.GetNumber(req.body.Weight), req.body.Material,
 			req.body.Stackable, req.body.Adjustability, req.body.Ergonomic,
 			req.body.Mechanism, req.body.Lumbar_Support, req.body.Compatible_With,
-			req.body.Castors, req.body.Lifting_Capacity, req.body.Max_Load_Weight,
+			req.body.Castors, await queries.GetNumber(req.body.Lifting_Capacity),
+			await queries.GetNumber(req.body.Max_Load_Weight),
 			req.body.Default_Warranty, aunzcode_id, accredit_id, req.body.Test_Certificate_Expiry]);
 	}
 
@@ -310,14 +315,14 @@ router.post("/insert/furniture", async function (req, res) {
 
 	furniture_check = await queries.Search(furniture.TableName, [req.body.ProductCode,
 		category4_id, supplier_id, origin_id, req.body.Generic_Description,
-		req.body.Long_Description, req.body.Unit_Price, req.body.MSRP_Price,
+		req.body.Long_Description, await queries.GetNumber(req.body.Unit_Price), await queries.GetNumber(req.body.MSRP_Price),
 		upic_id, manufacturer_id, testing_id, certification_id, details_id, tier_id]);
 
 	if (furniture_check === null) {
 		await queries.Insert(furniture.TableName, furniture.Columns, [furniture_id,
 			req.body.ProductCode,
 			category4_id, supplier_id, origin_id, req.body.Generic_Description,
-			req.body.Long_Description, req.body.Unit_Price, req.body.MSRP_Price,
+			req.body.Long_Description, await queries.GetNumber(req.body.Unit_Price), await queries.GetNumber(req.body.MSRP_Price),
 			upic_id, manufacturer_id, testing_id, certification_id, details_id, tier_id]);
 	}
 

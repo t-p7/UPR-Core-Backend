@@ -164,6 +164,14 @@ const queries = {
 		await this.GetColumns(tableName), await this.Count(tableName)];
 	}
 
+	GetNumber : async function(string) {
+		return string.match(/\d+.\d+/);
+	}
+
+	GetInt : async function(string) {
+		return string.match(/\b[0-9]+\b/);
+	}
+
 }
 
 
