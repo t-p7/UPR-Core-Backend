@@ -354,9 +354,9 @@ router.post("/insert/spreadsheet", async function (req, res) {
 			region_check = await queries.Search(region.TableName, [regions_list[j]]);
 			
 			if (region_check === null) {
-				await queries.Insert(region.TableName, region.Columns, [region.Count + i,
+				await queries.Insert(region.TableName, region.Columns, [region.Count + j,
 				regions_list[j]]);
-				region_id_list.push(region.Count + i);
+				region_id_list.push(region.Count + j);
 			}
 		
 			else {
@@ -368,8 +368,8 @@ router.post("/insert/spreadsheet", async function (req, res) {
 		serviceregion = new Table(await queries.GetAllInfo("Delivery_&_Service_Region_Pricing"));
 		
 		for (let j = 0; j < information[i].regions.length; i++) {
-			await queries.Insert(serviceregion.TableName, serviceregion.Columns, [region_id_list[i],
-				information[i].regions[j].box2, information[j].regions[j].box3, 
+			await queries.Insert(serviceregion.TableName, serviceregion.Columns, [region_id_list[j],
+				information[i].regions[j].box2, information[i].regions[j].box3, 
 				serviceregion.Count, furniture_id
 				]);
 			serviceregion.AddCount();
