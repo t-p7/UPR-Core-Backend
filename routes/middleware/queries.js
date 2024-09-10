@@ -165,11 +165,11 @@ const queries = {
 	},
 
 	GetNumber : async function(string) {
-		return string.match(/\d+.\d+/);
+		return String(string).match(/\d+.\d+/);
 	},
 
 	GetInt : async function(string) {
-		return string.match(/\b[0-9]+\b/);
+		return String(string).match(/\b[0-9]+\b/);
 	}
 
 }
