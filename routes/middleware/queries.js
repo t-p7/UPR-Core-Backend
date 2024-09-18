@@ -163,7 +163,7 @@ const queries = {
 		else {
 			return insert;
 		}
-	}
+	},
 
 	GetColumns : async function(tableName) {
 		const query = await sql`SELECT STRING_AGG(COLUMN_NAME, ','  ORDER BY ORDINAL_POSITION ASC) 
