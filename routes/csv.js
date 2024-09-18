@@ -122,13 +122,13 @@ router.post("/insert/spreadsheet", async function (req, res) {
 	
 			supplier_check = await queries.Search(supplier.TableName, [information[i].SupplierName,
 			information[i].ABN, information[i].Contact, information[i].Phone, information[i].Mobile,
-			information[i].Mobile, information[i].Email]);
+			information[i].Email, information[i].Website]);
 	
 			if (supplier_check === null) {
 				await queries.Insert(supplier.TableName, supplier.Columns, [supplier_id,
 					information[i].SupplierName,
 					information[i].ABN, information[i].Contact, information[i].Phone, information[i].Mobile,
-					information[i].Mobile, information[i].Email]);
+					information[i].Email, information[i].Website]);
 			}
 	
 			else {
