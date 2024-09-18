@@ -514,6 +514,4 @@ router.post("/edit/furniture/:id", async function (req, res) {
 }); 
 
 
-router.post()
-
 module.exports = router;
