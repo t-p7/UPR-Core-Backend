@@ -7,7 +7,10 @@ const Table = require('./middleware/tables');
 router.post("/edit/furniture/:id", async function (req, res) {
 	const search = await fetch(`http://localhost:4000/search/${req.params.id}`, {
 		method: "get",
-	};
+		headers: {
+          'Content-Type': 'application/json',
+        },
+	});
 
 	const results = await search.json();
 
