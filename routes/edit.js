@@ -350,10 +350,10 @@ router.post("/edit/furniture/:id", async function (req, res) {
 	tier_id = tier.Count;
 
 	if (req.body.Tier1_Price != search[0].Tier1_Price || req.body.Tier1_Quantity != search[0].Tier1_Quantity
-		req.body.Tier2_Price != search[0].Tier2_Price || req.body.Tier2_Quantity != search[0].Tier2_Quantity
-		req.body.Tier3_Price != search[0].Tier3_Price || req.body.Tier3_Quantity != search[0].Tier3_Quantity
-		req.body.Tier4_Price != search[0].Tier4_Price || req.body.Tier4_Quantity != search[0].Tier4_Quantity
-		req.body.Tier5_Price != search[0].Tier5_Price || req.body.Tier5_Quantity != search[0].Tier5_Quantity) {
+		|| req.body.Tier2_Price != search[0].Tier2_Price || req.body.Tier2_Quantity != search[0].Tier2_Quantity
+		|| req.body.Tier3_Price != search[0].Tier3_Price || req.body.Tier3_Quantity != search[0].Tier3_Quantity
+		|| req.body.Tier4_Price != search[0].Tier4_Price || req.body.Tier4_Quantity != search[0].Tier4_Quantity
+		|| req.body.Tier5_Price != search[0].Tier5_Price || req.body.Tier5_Quantity != search[0].Tier5_Quantity) {
 
 		tier_check = await queries.Search(tier.TableName, [await queries.GetNumber(req.body.Tier1_Price),
 		await queries.GetInt(req.body.Tier1_Quantity), await queries.GetNumber(req.body.Tier2_Price), 
