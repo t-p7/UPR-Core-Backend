@@ -120,6 +120,51 @@ const queries = {
 
 	},
 
+	Update : async function(tableName, columns, fields, id, id_column) {
+		column_types = await sql`SELECT STRING_AGG(DATA_TYPE, ',' ORDER BY ORDINAL_POSITION ASC) 
+		AS COLUMN_TYPES
+		FROM INFORMATION_SCHEMA.COLUMNS
+		WHERE TABLE_NAME = '${sql.unsafe(tableName)}'`;
+
+		column_types = column_types[0].column_types.toString().split(",");
+
+		query = `UPDATE "${sql.unsafe(tableName)}" SET `;
+
+		for (i = 0; i < fields.length - 1; i++) {
+			query = query + `${sql.unsafe(columns[i])} = `
+
+			if (columns_types[i] === "text") {
+				query = query + `'${sql.unsafe(columns[i])}'`;
+			}
+			else {
+				query = query + `${sql.unsafe(fields[i])}`;
+			}
+
+			query = query + `, `
+		}
+
+		if (columns_types[field.length - 1] === "text") {
+				query = query + `'${sql.unsafe(columns[i])}'`;
+			}
+		else {
+			query = query + `${sql.unsafe(fields[i])}`;
+		}
+
+		query = query + `WHERE ${sql.unsafe(id_column)} = ${sql.unsafe(id)};`;
+
+		init_query = query.toString();
+
+		insert = await sql`${sql.unsafe(init_query)}`;
+
+		if (insert.length === 0) {
+			return null;
+		}
+
+		else {
+			return insert;
+		}
+	}
+
 	GetColumns : async function(tableName) {
 		const query = await sql`SELECT STRING_AGG(COLUMN_NAME, ','  ORDER BY ORDINAL_POSITION ASC) 
 		AS COLUMNS
@@ -165,7 +210,7 @@ const queries = {
 	},
 
 	GetNumber : async function(string) {
-		return String(string).match(/\d+.\d+/);
+		return String(string).match(/^(?!-0?(\.0+)?$)-?(0|[1-9]\d*)?(\.\d+)?(?<=\d)/);
 	},
 
 	GetInt : async function(string) {

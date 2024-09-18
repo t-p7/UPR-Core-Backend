@@ -127,7 +127,7 @@ router.post("/insert/spreadsheet", async function (req, res) {
 			await queries.Insert(supplier.TableName, supplier.Columns, [supplier_id,
 				information[i].SupplierName,
 				information[i].ABN, information[i].Contact, information[i].Phone, information[i].Mobile,
-				information[i].Mobile, information[i].Email]);
+				information[i].Email, information[i].Website]);
 		}
 
 		else {
@@ -344,8 +344,10 @@ router.post("/insert/spreadsheet", async function (req, res) {
 
 		regions_list = [];
 
-		for (let j = 0; j < information[i].regions.length; j++) {
-			regions_list.push(information[i].regions[j].box1);
+		parsed_regions = JSON.parse(information[i].regions);
+
+		for (let j = 0; j < parsed_regions.length; j++) {
+			regions_list.push(parsed_regions.regions[j].box1);
 		}
 
 		region_id_list = [];
@@ -369,7 +371,7 @@ router.post("/insert/spreadsheet", async function (req, res) {
 		
 		for (let j = 0; j < information[i].regions.length; i++) {
 			await queries.Insert(serviceregion.TableName, serviceregion.Columns, [region_id_list[j],
-				information[i].regions[j].box2, information[i].regions[j].box3, 
+				parsed_regions[j].box2, parsed_regions[j].box3, 
 				serviceregion.Count, furniture_id
 				]);
 			serviceregion.AddCount();

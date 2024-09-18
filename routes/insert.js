@@ -123,7 +123,7 @@ router.post("/insert/furniture", async function (req, res) {
 		await queries.Insert(supplier.TableName, supplier.Columns, [supplier_id,
 			req.body.SupplierName,
 			req.body.ABN, req.body.Contact, req.body.Phone, req.body.Mobile,
-			req.body.Mobile, req.body.Email]);
+			req.body.Email, req.body.Website]);
 	}
 
 	else {
