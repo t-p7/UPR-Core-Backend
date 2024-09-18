@@ -1,8 +1,8 @@
 const sql = require('../../db');
 
 const queries = {
-	Count : async function(tableName) {
-		
+	Count: async function (tableName) {
+
 		idName = await this.GetPrimaryKey(tableName);
 
 		if (idName.length === 0) {
@@ -10,7 +10,7 @@ const queries = {
 		}
 
 		count = await sql`SELECT MAX("${sql.unsafe(idName)}") FROM "${sql.unsafe(tableName)}";`;
-		
+
 		if (count.length === 0) {
 			return 1;
 		}
@@ -18,10 +18,10 @@ const queries = {
 		else {
 			return count[0].max + 1;
 		}
-		
+
 	},
 
-	Search : async function(tableName, fields) {
+	Search: async function (tableName, fields) {
 		columns = await this.GetColumns(tableName);
 
 		query = `SELECT * FROM "${tableName}"
@@ -30,7 +30,7 @@ const queries = {
 		for (i = 0; i < fields.length - 1; i++) {
 			query = query + `'${fields[i]}' in (`;
 			for (j = 0; j < columns.length - 1; j++) {
-				
+
 				query = query + `CAST("${tableName}"."${columns[j]}" AS text), `
 
 			}
@@ -41,14 +41,14 @@ const queries = {
 		}
 
 		query = query + ` '${fields[fields.length - 1]}' in (`;
-			for (j = 0; j < columns.length - 1; j++) {
-				
-				query = query + `CAST("${tableName}"."${columns[j]}" AS text), `
+		for (j = 0; j < columns.length - 1; j++) {
 
-			}
+			query = query + `CAST("${tableName}"."${columns[j]}" AS text), `
+
+		}
 		query = query + `CAST("${tableName}"."${columns[columns.length - 1]}" AS text))`
-		
-		
+
+
 		query = query + `;`;
 
 		init_query = query.toString();
@@ -65,7 +65,7 @@ const queries = {
 		}
 	},
 
-	Insert : async function(tableName, columns, fields) {
+	Insert: async function (tableName, columns, fields) {
 
 		column_types = await sql`SELECT STRING_AGG(DATA_TYPE, ',' ORDER BY ORDINAL_POSITION ASC) 
 		AS COLUMN_TYPES
@@ -74,7 +74,7 @@ const queries = {
 
 
 		column_types = column_types[0].column_types.toString().split(",");
-		
+
 		query = `INSERT INTO "${tableName}" (`;
 
 		for (i = 0; i < columns.length - 1; i++) {
@@ -93,12 +93,12 @@ const queries = {
 			else {
 				query = query + `${fields[i]}, `;
 			}
-			
+
 		}
 
 		if (column_types[fields.length - 1] === "text") {
-				query = query + `'${fields[fields.length - 1]}'`;
-			}
+			query = query + `'${fields[fields.length - 1]}'`;
+		}
 
 		else {
 			query = query + `${fields[fields.length - 1]}`;
@@ -120,7 +120,7 @@ const queries = {
 
 	},
 
-	Update : async function(tableName, columns, fields, id, id_column) {
+	Update: async function (tableName, columns, fields, id, id_column) {
 		column_types = await sql`SELECT STRING_AGG(DATA_TYPE, ',' ORDER BY ORDINAL_POSITION ASC) 
 		AS COLUMN_TYPES
 		FROM INFORMATION_SCHEMA.COLUMNS
@@ -144,8 +144,8 @@ const queries = {
 		}
 
 		if (columns_types[field.length - 1] === "text") {
-				query = query + `'${sql.unsafe(columns[i])}'`;
-			}
+			query = query + `'${sql.unsafe(columns[i])}'`;
+		}
 		else {
 			query = query + `${sql.unsafe(fields[i])}`;
 		}
@@ -165,7 +165,7 @@ const queries = {
 		}
 	},
 
-	GetColumns : async function(tableName) {
+	GetColumns: async function (tableName) {
 		const query = await sql`SELECT STRING_AGG(COLUMN_NAME, ','  ORDER BY ORDINAL_POSITION ASC) 
 		AS COLUMNS
 		FROM INFORMATION_SCHEMA.COLUMNS
@@ -174,7 +174,7 @@ const queries = {
 		return query[0].columns.split(",");
 	},
 
-	GetTextColumns : async function(tableName) {
+	GetTextColumns: async function (tableName) {
 		query = await sql`SELECT STRING_AGG(COLUMN_NAME, ','  ORDER BY ORDINAL_POSITION ASC) 
 		AS COLUMNS 
 		FROM INFORMATION_SCHEMA.COLUMNS 
@@ -184,7 +184,7 @@ const queries = {
 		return query[0].columns.split(",");
 	},
 
-	GetPrimaryKey : async function(tableName) {
+	GetPrimaryKey: async function (tableName) {
 		query = await sql`select C.COLUMN_NAME AS column FROM
 			INFORMATION_SCHEMA.TABLE_CONSTRAINTS T
 			JOIN INFORMATION_SCHEMA.CONSTRAINT_COLUMN_USAGE C
@@ -200,20 +200,25 @@ const queries = {
 		else {
 			return query[0].column;
 		}
-		
+
 	},
 
-	GetAllInfo : async function(tableName) {
+	GetAllInfo: async function (tableName) {
 
-		return [tableName, await this.GetPrimaryKey(tableName), 
-		await this.GetColumns(tableName), await this.Count(tableName)];
+		return [tableName, await this.GetPrimaryKey(tableName),
+			await this.GetColumns(tableName), await this.Count(tableName)];
 	},
 
-	GetNumber : async function(string) {
-		return String(string).match(/^(?!-0?(\.0+)?$)-?(0|[1-9]\d*)?(\.\d+)?(?<=\d)/);
+	GetNumber: async function (string) {
+		// return String(string).match(/^(?!-0?(\.0+)?$)-?(0|[1-9]\d*)?(\.\d+)?(?<=\d)/);
+		if (string === null || string === undefined || string.trim() === '') {
+			return null;
+		}
+		const match = String(string).match(/[\d.]+/);
+		return match ? parseFloat(match[0]) : null;
 	},
 
-	GetInt : async function(string) {
+	GetInt: async function (string) {
 		return String(string).match(/\b[0-9]+\b/);
 	}
 
