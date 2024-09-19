@@ -354,6 +354,7 @@ router.post("/insert/spreadsheet", async function (req, res) {
 	
 				if (!region_check) {
 					await queries.Insert(region.TableName, region.Columns, [region.Count, regionObj.box1]);
+					region.AddCount();
 					region_check = await queries.Search(region.TableName, [regionObj.box1]);
 				}
 	
