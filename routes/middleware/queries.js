@@ -108,6 +108,8 @@ const queries = {
 
 		init_query = query.toString();
 
+		console.log(init_query);
+
 		insert = await sql`${sql.unsafe(init_query)}`;
 
 		if (insert.length === 0) {
