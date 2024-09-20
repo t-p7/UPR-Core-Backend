@@ -232,7 +232,7 @@ const queries = {
 	// 	return query[0].columns.split(",");
 	//   },
 	GetColumns: async function (tableName) {
-		console.log(`Fetching columns for table: ${tableName}`);  // Debugging log to check table name
+		// console.log(`Fetching columns for table: ${tableName}`);  // Debugging log to check table name
 	
 		// Ensure we handle case-sensitivity correctly with double quotes
 		const query = await sql`SELECT STRING_AGG(COLUMN_NAME, ',' ORDER BY ORDINAL_POSITION ASC) AS COLUMNS
@@ -240,7 +240,7 @@ const queries = {
 			WHERE TABLE_NAME = ${tableName}`;
 	
 		if (query && query.length > 0 && query[0].columns) {
-			console.log(`Columns found for table ${tableName}: ${query[0].columns}`);  // Debugging log to check found columns
+			// console.log(`Columns found for table ${tableName}: ${query[0].columns}`);  // Debugging log to check found columns
 			return query[0].columns.split(",");
 		} else {
 			throw new Error(`No columns found for table ${tableName}`);
