@@ -143,8 +143,7 @@ router.post("/insert/furniture", async function (req, res) {
 
 		upic_id = req.body.UPIC;
 	
-		upic_check = await queries.Search(upic.TableName, [req.body.UPIC,
-			req.body.Inclusions, req.body.Queensland_Made, req.body.Indigenous_Furniture]);
+		upic_check = await queries.Search(upic.TableName, [req.body.UPIC]);
 	
 		if (upic_check === null) {
 			await queries.Insert(upic.TableName, upic.Columns, [upic_id,
@@ -170,8 +169,7 @@ router.post("/insert/furniture", async function (req, res) {
 		supplier_id = supplier.Count;
 	
 		supplier_check = await queries.Search(supplier.TableName, [req.body.SupplierName,
-			req.body.ABN, req.body.Contact, req.body.Phone, req.body.Mobile,
-			req.body.Mobile, req.body.Email]);
+			req.body.ABN]);
 	
 		if (supplier_check === null) {
 			await queries.Insert(supplier.TableName, supplier.Columns, [supplier_id,
@@ -198,8 +196,7 @@ router.post("/insert/furniture", async function (req, res) {
 
 		category_id = category.Count;
 	
-		category_check = await queries.Search(category.TableName, [req.body.CategoryName,
-			req.body.CategoryDescription]);
+		category_check = await queries.Search(category.TableName, [req.body.CategoryName]);
 	
 		if (category_check === null) {
 			await queries.Insert(category.TableName, category.Columns, [category_id,
@@ -224,8 +221,7 @@ router.post("/insert/furniture", async function (req, res) {
 	
 		category2_id = category2.Count;
 	
-		category2_check = await queries.Search(category2.TableName, [req.body.Category_2Name,
-			req.body.Category_2Description]);
+		category2_check = await queries.Search(category2.TableName, [req.body.Category_2Name]);
 	
 		if (category2_check === null) {
 			await queries.Insert(category2.TableName, category2.Columns, [category2_id,
@@ -250,8 +246,7 @@ router.post("/insert/furniture", async function (req, res) {
 
 		category3_id = category3.Count;
 
-		category3_check = await queries.Search(category3.TableName, [req.body.Category_3Name,
-			req.body.Category_3Description]);
+		category3_check = await queries.Search(category3.TableName, [req.body.Category_3Name]);
 
 		if (category3_check === null) {
 			await queries.Insert(category3.TableName, category3.Columns, [category3_id,
@@ -275,8 +270,7 @@ router.post("/insert/furniture", async function (req, res) {
 
 		category4_id = category4.Count;
 
-		category4_check = await queries.Search(category4.TableName, [req.body.Category_4Name,
-			req.body.Category_4Description, category3_id]);
+		category4_check = await queries.Search(category4.TableName, [req.body.Category_4Name]);
 
 		if (category3_check === null) {
 			await queries.Insert(category4.TableName, category4.Columns, [category4_id,
