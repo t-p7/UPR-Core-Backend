@@ -7,252 +7,367 @@ const Table = require('./middleware/tables');
 router.post("/insert/furniture", async function (req, res) {
 
 	//Countries
-	countries = new Table(await queries.GetAllInfo("Countries"));
 
-	country_id = countries.Count;
-	country_check = await queries.Search(countries.TableName, [req.body.Country]);
+	if (await queries.HasFields([req.body.Country])) {
+		countries = new Table(await queries.GetAllInfo("Countries"));
 
-	if (country_check === null) {
-		await queries.Insert(countries.TableName, countries.Columns, [country_id, req.body.Country])
+		country_id = countries.Count;
+		country_check = await queries.Search(countries.TableName, [req.body.Country]);
+	
+		if (country_check === null) {
+			await queries.Insert(countries.TableName, countries.Columns, [country_id, req.body.Country])
+		}
+	
+		else {
+			country_id = country_check[0].CountryID;
+		}
 	}
 
 	else {
-		country_id = country_check[0].CountryID;
+		res.status(403).json(message: "No country specified")
 	}
+	
 
 	//Origin
-	origin = new Table(await queries.GetAllInfo("Origin"));
 
-	origin_id = origin.Count;
-	origin_check = await queries.Search(countries.TableName, [req.body.Origin_of_Imported_Products,
-		req.body.Australian_Made, req.body.Product_of_Australia,
-		req.body.SME, req.body.Aboriginal_TorresStraitIslander_Content,
-		req.body.Recycled_Content]);
+	if (await queries.HasFields([req.body.Origin_of_Imported_Products])) {
+		origin = new Table(await queries.GetAllInfo("Origin"));
 
-	if (origin_check === null) {
-
-		await queries.Insert(origin.TableName, origin.Columns, [origin_id, country_id,
-			req.body.Origin_of_Imported_Products,
+		origin_id = origin.Count;
+		origin_check = await queries.Search(countries.TableName, [req.body.Origin_of_Imported_Products,
 			req.body.Australian_Made, req.body.Product_of_Australia,
 			req.body.SME, req.body.Aboriginal_TorresStraitIslander_Content,
 			req.body.Recycled_Content]);
+
+		if (origin_check === null) {
+
+			await queries.Insert(origin.TableName, origin.Columns, [origin_id, country_id,
+				req.body.Origin_of_Imported_Products,
+				req.body.Australian_Made, req.body.Product_of_Australia,
+				req.body.SME, req.body.Aboriginal_TorresStraitIslander_Content,
+				req.body.Recycled_Content]);
+		}
+
+		else {
+			origin_id = origin_check[0].OriginID;
+		}
 	}
 
 	else {
-		origin_id = origin_check[0].OriginID;
+		res.status(403).json(message: "No Origin of Origin_of_Imported_Products specified")
 	}
 	
+	
 	//Manufacturer
-	manufacturer = new Table(await queries.GetAllInfo("Manufacturer"));
 
-	manufacturer_id = manufacturer.Count;
+	if (await queries.HasFields([req.body.Manufacturer])) {
+		manufacturer = new Table(await queries.GetAllInfo("Manufacturer"));
 
-	manufacturer_check = await queries.Search(manufacturer.TableName, [req.body.Manufacturer]);
-
-	if (manufacturer_check === null) {
-		await queries.Insert(manufacturer.TableName, manufacturer.Columns, [manufacturer_id, 
-			req.body.Manufacturer]);
+		manufacturer_id = manufacturer.Count;
+	
+		manufacturer_check = await queries.Search(manufacturer.TableName, [req.body.Manufacturer]);
+	
+		if (manufacturer_check === null) {
+			await queries.Insert(manufacturer.TableName, manufacturer.Columns, [manufacturer_id, 
+				req.body.Manufacturer]);
+		}
+	
+		else {
+			manufacturer_id = manufacturer_check[0].ManufacturerID;
+		}
 	}
 
 	else {
-		manufacturer_id = manufacturer_check[0].ManufacturerID;
+		res.status(403).json(message: "No Manufacturer specified")
 	}
+
+	//else {
+	//	res.status(403).json(message: "No  specified")
+	//}
+	
 
 	//Testing Agency
-	testing = new Table(await queries.GetAllInfo("Testing_Agency"));
 
-	testing_id = testing.Count;
+	if (await queries.HasFields([req.body.Testing_Agency])) {
+		testing = new Table(await queries.GetAllInfo("Testing_Agency"));
 
-	testing_check = await queries.Search(testing.TableName, [req.body.Testing_Agency]);
-
-	if (testing_check === null) {
-		await queries.Insert(testing.TableName, testing.Columns, [testing_id, 
-			req.body.Testing_Agency]);
+		testing_id = testing.Count;
+	
+		testing_check = await queries.Search(testing.TableName, [req.body.Testing_Agency]);
+	
+		if (testing_check === null) {
+			await queries.Insert(testing.TableName, testing.Columns, [testing_id, 
+				req.body.Testing_Agency]);
+		}
+	
+		else {
+			testing_id = testing_check[0].Testing_AgencyID;
+		}
 	}
 
 	else {
-		testing_id = testing_check[0].Testing_AgencyID;
+		res.status(403).json(message: "No Testing Agency specified")
 	}
+	
 
 	//Certification
-	certification = new Table(await queries.GetAllInfo("Certification"));
 
-	certification_id = certification.Count;
+	if (await queries.HasFields([req.body.Other_Certificates])) {
+		certification = new Table(await queries.GetAllInfo("Certification"));
 
-	certification_check = await queries.Search(certification.TableName, [req.body.Other_Certificates,
-		req.body.E0_Certified, req.body.Timber_Certified, req.body.Other_VOCs_Hazardous_Substances]);
+		certification_id = certification.Count;
 
-	if (certification_check === null) {
-		await queries.Insert(certification.TableName, certification.Columns, [certification_id,
-			req.body.Other_Certificates, req.body.E0_Certified, req.body.Timber_Certified,
-			req.body.Other_VOCs_Hazardous_Substances]);
+		certification_check = await queries.Search(certification.TableName, [req.body.Other_Certificates,
+			req.body.E0_Certified, req.body.Timber_Certified, req.body.Other_VOCs_Hazardous_Substances]);
+
+		if (certification_check === null) {
+			await queries.Insert(certification.TableName, certification.Columns, [certification_id,
+				req.body.Other_Certificates, req.body.E0_Certified, req.body.Timber_Certified,
+				req.body.Other_VOCs_Hazardous_Substances]);
+		}
+
+		else {
+			certification_id = certification_check[0].CertificationID;
+		}
 	}
 
 	else {
-		certification_id = certification_check[0].CertificationID;
+		res.status(403).json(message: "No Other Certification specified")
 	}
+	
 
 	//UPIC
-	upic = new Table(await queries.GetAllInfo("UPIC"));
 
-	upic_id = req.body.UPIC;
+	if (await queries.HasFields([req.body.UPIC])) {
+		upic = new Table(await queries.GetAllInfo("UPIC"));
 
-	upic_check = await queries.Search(upic.TableName, [req.body.UPIC,
-		req.body.Inclusions, req.body.Queensland_Made, req.body.Indigenous_Furniture]);
-
-	if (upic_check === null) {
-		await queries.Insert(upic.TableName, upic.Columns, [upic_id,
+		upic_id = req.body.UPIC;
+	
+		upic_check = await queries.Search(upic.TableName, [req.body.UPIC,
 			req.body.Inclusions, req.body.Queensland_Made, req.body.Indigenous_Furniture]);
+	
+		if (upic_check === null) {
+			await queries.Insert(upic.TableName, upic.Columns, [upic_id,
+				req.body.Inclusions, req.body.Queensland_Made, req.body.Indigenous_Furniture]);
+		}
+	
+		else {
+			upic_id = upic_check[0].UPIC;
+		}
 	}
 
 	else {
-		upic_id = upic_check[0].UPIC;
+		res.status(403).json(message: "No UPIC specified")
 	}
+	
 
 
 	//Suppliers
-	supplier = new Table(await queries.GetAllInfo("Supplier"));
 
-	supplier_id = supplier.Count;
+	if (await queries.HasFields([req.body.SupplierName])) {
+		supplier = new Table(await queries.GetAllInfo("Supplier"));
 
-	supplier_check = await queries.Search(supplier.TableName, [req.body.SupplierName,
-		req.body.ABN, req.body.Contact, req.body.Phone, req.body.Mobile,
-		req.body.Mobile, req.body.Email]);
-
-	if (supplier_check === null) {
-		await queries.Insert(supplier.TableName, supplier.Columns, [supplier_id,
-			req.body.SupplierName,
+		supplier_id = supplier.Count;
+	
+		supplier_check = await queries.Search(supplier.TableName, [req.body.SupplierName,
 			req.body.ABN, req.body.Contact, req.body.Phone, req.body.Mobile,
-			req.body.Email, req.body.Website]);
+			req.body.Mobile, req.body.Email]);
+	
+		if (supplier_check === null) {
+			await queries.Insert(supplier.TableName, supplier.Columns, [supplier_id,
+				req.body.SupplierName,
+				req.body.ABN, req.body.Contact, req.body.Phone, req.body.Mobile,
+				req.body.Email, req.body.Website]);
+		}
+	
+		else {
+			supplier_id = supplier_check[0].SupplierID;
+		}
 	}
 
+
 	else {
-		supplier_id = supplier_check[0].SupplierID;
+		res.status(403).json(message: "No Supplier specified")
 	}
 
 
 	//Category
-	category = new Table(await queries.GetAllInfo("Category"));
 
-	category_id = category.Count;
+	if (await queries.HasFields([req.body.CategoryName])) {
+		category = new Table(await queries.GetAllInfo("Category"));
 
-	category_check = await queries.Search(category.TableName, [req.body.CategoryName,
-		req.body.CategoryDescription]);
-
-	if (category_check === null) {
-		await queries.Insert(category.TableName, category.Columns, [category_id,
-			req.body.CategoryName, req.body.CategoryDescription]);
+		category_id = category.Count;
+	
+		category_check = await queries.Search(category.TableName, [req.body.CategoryName,
+			req.body.CategoryDescription]);
+	
+		if (category_check === null) {
+			await queries.Insert(category.TableName, category.Columns, [category_id,
+				req.body.CategoryName, req.body.CategoryDescription]);
+		}
+	
+		else {
+			category_id = category_check[0].CategoryID;
+		}
 	}
 
+
 	else {
-		category_id = category_check[0].CategoryID;
+		res.status(403).json(message: "No First Level Category specified")
 	}
 
 
 	//Category2
-	category2 = new Table(await queries.GetAllInfo("Category2"));
 
-	category2_id = category2.Count;
-
-	category2_check = await queries.Search(category2.TableName, [req.body.Category_2Name,
-		req.body.Category_2Description]);
-
-	if (category2_check === null) {
-		await queries.Insert(category2.TableName, category2.Columns, [category2_id,
-			req.body.Category_2Name, req.body.Category_2Description, category_id]);
+	if (await queries.HasFields([req.body.Category_2Name])) {
+		category2 = new Table(await queries.GetAllInfo("Category2"));
+	
+		category2_id = category2.Count;
+	
+		category2_check = await queries.Search(category2.TableName, [req.body.Category_2Name,
+			req.body.Category_2Description]);
+	
+		if (category2_check === null) {
+			await queries.Insert(category2.TableName, category2.Columns, [category2_id,
+				req.body.Category_2Name, req.body.Category_2Description, category_id]);
+		}
+	
+		else {
+			category2_id = category2_check[0].Category_2ID;
+		}
 	}
 
+
 	else {
-		category2_id = category2_check[0].Category_2ID;
+		res.status(403).json(message: "No Second Level Category specified")
 	}
 
 
 	//Category3
-	category3 = new Table(await queries.GetAllInfo("Category3"));
 
-	category3_id = category3.Count;
+	if (await queries.HasFields([req.body.Category_3Name])) {
+		category3 = new Table(await queries.GetAllInfo("Category3"));
 
-	category3_check = await queries.Search(category3.TableName, [req.body.Category_3Name,
-		req.body.Category_3Description]);
+		category3_id = category3.Count;
 
-	if (category3_check === null) {
-		await queries.Insert(category3.TableName, category3.Columns, [category3_id,
-			req.body.Category_3Name, req.body.Category_3Description, category2_id]);
+		category3_check = await queries.Search(category3.TableName, [req.body.Category_3Name,
+			req.body.Category_3Description]);
+
+		if (category3_check === null) {
+			await queries.Insert(category3.TableName, category3.Columns, [category3_id,
+				req.body.Category_3Name, req.body.Category_3Description, category2_id]);
+		}
+
+		else {
+			category3_id = category3_check[0].Category_3ID;
+		}
 	}
 
 	else {
-		category3_id = category3_check[0].Category_3ID;
+		res.status(403).json(message: "No Third Level Category specified")
 	}
+	
 
 	//Category4
-	category4 = new Table(await queries.GetAllInfo("Category4"));
 
-	category4_id = category4.Count;
+	if (await queries.HasFields([req.body.Category_4Name])) {
+		category4 = new Table(await queries.GetAllInfo("Category4"));
 
-	category4_check = await queries.Search(category4.TableName, [req.body.Category_4Name,
-		req.body.Category_4Description, category3_id]);
+		category4_id = category4.Count;
 
-	if (category3_check === null) {
-		await queries.Insert(category4.TableName, category4.Columns, [category4_id,
-			req.body.Category_4Name, req.body.Category_4Description, category3_id]);
+		category4_check = await queries.Search(category4.TableName, [req.body.Category_4Name,
+			req.body.Category_4Description, category3_id]);
+
+		if (category3_check === null) {
+			await queries.Insert(category4.TableName, category4.Columns, [category4_id,
+				req.body.Category_4Name, req.body.Category_4Description, category3_id]);
+		}
+
+		else {
+			category4_id = category4_check[0].Category_4ID;
+		}
 	}
 
 	else {
-		category4_id = category4_check[0].Category_4ID;
+		res.status(403).json(message: "No Fourth Level Category specified")
 	}
+	
 
 
 	//Colours
-	colours = new Table(await queries.GetAllInfo("Colours"));
 
-	colours_id = colours.Count;
+	if (await queries.HasFields([req.body.Colours])) {
+		colours = new Table(await queries.GetAllInfo("Colours"));
 
-	colours_check = await queries.Search(colours.TableName, [req.body.Colours]);
+		colours_id = colours.Count;
 
-	if (colours_check === null) {
-		await queries.Insert(colours.TableName, colours.Columns, [colours_id,
-			req.body.Colours]);
+		colours_check = await queries.Search(colours.TableName, [req.body.Colours]);
+
+		if (colours_check === null) {
+			await queries.Insert(colours.TableName, colours.Columns, [colours_id,
+				req.body.Colours]);
+		}
+
+		else {
+			colours_id = colours_check[0].ColourID;
+		}
 	}
 
 	else {
-		colours_id = colours_check[0].ColourID;
+		res.status(403).json(message: "No Colour specified")
 	}
-
+	
 
 	//AU/NZ Code
-	aunzcode = new Table(await queries.GetAllInfo("AU/NZ_Code"));
 
-	aunzcode_id = aunzcode.Count;
+	if (await queries.HasFields([req.body.AUNZ_Code])) {
+		aunzcode = new Table(await queries.GetAllInfo("AU/NZ_Code"));
 
-	aunzcode_check = await queries.Search(aunzcode.TableName, [req.body.AUNZ_Code]);
-
-	if (aunzcode_check === null) {
-		await queries.Insert(aunzcode.TableName, aunzcode.Columns, [aunzcode_id,
-			req.body.AUNZ_Code]);
+		aunzcode_id = aunzcode.Count;
+	
+		aunzcode_check = await queries.Search(aunzcode.TableName, [req.body.AUNZ_Code]);
+	
+		if (aunzcode_check === null) {
+			await queries.Insert(aunzcode.TableName, aunzcode.Columns, [aunzcode_id,
+				req.body.AUNZ_Code]);
+		}
+	
+		else {
+			aunzcode_id = aunzcode_check[0].AUNZ_CodeID;
+		}
 	}
 
 	else {
-		aunzcode_id = aunzcode_check[0].AUNZ_CodeID;
+		res.status(403).json(message: "No AU/NZ Code specified")
 	}
 
 
 	//Product Accreditation
-	accredit = new Table(await queries.GetAllInfo("Product_Accreditation"));
 
-	accredit_id = accredit.Count;
+	if (await queries.HasFields([req.body.Accreditation_Scheme])) {
+		accredit = new Table(await queries.GetAllInfo("Product_Accreditation"));
 
-	accredit_check = await queries.Search(accredit.TableName, [req.body.Accreditation_Scheme]);
+		accredit_id = accredit.Count;
 
-	if (accredit_check === null) {
-		await queries.Insert(accredit.TableName, accredit.Columns, [accredit_id,
-			req.body.Accreditation_Scheme]);
+		accredit_check = await queries.Search(accredit.TableName, [req.body.Accreditation_Scheme]);
+
+		if (accredit_check === null) {
+			await queries.Insert(accredit.TableName, accredit.Columns, [accredit_id,
+				req.body.Accreditation_Scheme]);
+		}
+
+		else {
+			accredit_id = accredit_check[0].Product_AccreditationID;
+		}
 	}
 
 	else {
-		accredit_id = accredit_check[0].Product_AccreditationID;
+		res.status(403).json(message: "No Product Accreditation specified")
 	}
+	
 
 	//Tier Pricing
+
 	tier = new Table(await queries.GetAllInfo("Tier_Pricing_&_Quantity"));
 
 	tier_id = tier.Count;
@@ -280,58 +395,74 @@ router.post("/insert/furniture", async function (req, res) {
 	}
 
 	//Details
-	details = new Table(await queries.GetAllInfo("Details"));
 
-	details_id = details.Count;
+	if (await queries.HasFields([await queries.GetNumber(req.body.Height), await queries.GetNumber(req.body.Width),
+		await queries.GetNumber(req.body.Depth)])) {
+		details = new Table(await queries.GetAllInfo("Details"));
 
-	details_check = await queries.Search(details.TableName, [colours_id,
-		req.body.Assembly_Required, await queries.GetNumber(req.body.Height), await queries.GetNumber(req.body.Width),
-		await queries.GetNumber(req.body.Depth), await queries.GetNumber(req.body.Weight), req.body.Material,
-		req.body.Stackable, req.body.Adjustability, req.body.Ergonomic,
-		req.body.Mechanism, req.body.Lumbar_Support, req.body.Compatible_With,
-		req.body.Castors, await queries.GetNumber(req.body.Lifting_Capacity), await queries.GetNumber(req.body.Max_Load_Weight),
-		req.body.Default_Warranty, aunzcode_id, accredit_id, req.body.Test_Certificate_Expiry]);
+		details_id = details.Count;
 
-	if (details_check === null) {
-		await queries.Insert(details.TableName, details.Columns, [details_id,
-			colours_id,
+		details_check = await queries.Search(details.TableName, [colours_id,
 			req.body.Assembly_Required, await queries.GetNumber(req.body.Height), await queries.GetNumber(req.body.Width),
 			await queries.GetNumber(req.body.Depth), await queries.GetNumber(req.body.Weight), req.body.Material,
 			req.body.Stackable, req.body.Adjustability, req.body.Ergonomic,
 			req.body.Mechanism, req.body.Lumbar_Support, req.body.Compatible_With,
-			req.body.Castors, await queries.GetNumber(req.body.Lifting_Capacity),
-			await queries.GetNumber(req.body.Max_Load_Weight),
+			req.body.Castors, await queries.GetNumber(req.body.Lifting_Capacity), await queries.GetNumber(req.body.Max_Load_Weight),
 			req.body.Default_Warranty, aunzcode_id, accredit_id, req.body.Test_Certificate_Expiry]);
+
+		if (details_check === null) {
+			await queries.Insert(details.TableName, details.Columns, [details_id,
+				colours_id,
+				req.body.Assembly_Required, await queries.GetNumber(req.body.Height), await queries.GetNumber(req.body.Width),
+				await queries.GetNumber(req.body.Depth), await queries.GetNumber(req.body.Weight), req.body.Material,
+				req.body.Stackable, req.body.Adjustability, req.body.Ergonomic,
+				req.body.Mechanism, req.body.Lumbar_Support, req.body.Compatible_With,
+				req.body.Castors, await queries.GetNumber(req.body.Lifting_Capacity),
+				await queries.GetNumber(req.body.Max_Load_Weight),
+				req.body.Default_Warranty, aunzcode_id, accredit_id, req.body.Test_Certificate_Expiry]);
+		}
+
+		else {
+			details_id = details_check[0].DetailsID;
+		}
 	}
 
-	else {
-		details_id = details_check[0].DetailsID;
-	}
+
+	
 
 	//Furniture	
-	furniture = new Table(await queries.GetAllInfo("Furniture"));
 
-	furniture_id = furniture.Count;
+	if (await queries.HasFields([req.body.ProductCode, req.body.Generic_Description])) {
+		furniture = new Table(await queries.GetAllInfo("Furniture"));
 
-	furniture_check = await queries.Search(furniture.TableName, [req.body.ProductCode,
-		category4_id, supplier_id, origin_id, req.body.Generic_Description,
-		req.body.Long_Description, await queries.GetNumber(req.body.Unit_Price), await queries.GetNumber(req.body.MSRP_Price),
-		upic_id, manufacturer_id, testing_id, certification_id, details_id, tier_id]);
+		furniture_id = furniture.Count;
 
-	if (furniture_check === null) {
-		await queries.Insert(furniture.TableName, furniture.Columns, [furniture_id,
-			req.body.ProductCode,
+		furniture_check = await queries.Search(furniture.TableName, [req.body.ProductCode,
 			category4_id, supplier_id, origin_id, req.body.Generic_Description,
 			req.body.Long_Description, await queries.GetNumber(req.body.Unit_Price), await queries.GetNumber(req.body.MSRP_Price),
 			upic_id, manufacturer_id, testing_id, certification_id, details_id, tier_id]);
+
+		if (furniture_check === null) {
+			await queries.Insert(furniture.TableName, furniture.Columns, [furniture_id,
+				req.body.ProductCode,
+				category4_id, supplier_id, origin_id, req.body.Generic_Description,
+				req.body.Long_Description, await queries.GetNumber(req.body.Unit_Price), await queries.GetNumber(req.body.MSRP_Price),
+				upic_id, manufacturer_id, testing_id, certification_id, details_id, tier_id]);
+		}
+
+		else {
+			furniture_id = furniture_check[0].FurnitureID;
+		}
 	}
 
 	else {
-		furniture_id = furniture_check[0].FurnitureID;
+		res.status(403).json(message: "No DET Part Number or Generic Description specified")
 	}
+	
 
 
 	//Regions
+
 	region = new Table(await queries.GetAllInfo("Regions"));
 
 	regions_list = [];
@@ -357,6 +488,7 @@ router.post("/insert/furniture", async function (req, res) {
 	} 
 
 	//Delivery & Service Region Pricing
+
 	serviceregion = new Table(await queries.GetAllInfo("Delivery_&_Service_Region_Pricing"));
 	
 	for (let i = 0; i < req.body.ServiceRegions.length; i++) {
@@ -369,19 +501,23 @@ router.post("/insert/furniture", async function (req, res) {
 
 
 	//Specification
-	specification = new Table(await queries.GetAllInfo("Specification"));
 
-	for (let i = 0; i < req.body.Specification.length; i++) {
-		await queries.Insert(specification.TableName, specification.Columns,
-			[specification.Count, req.body.Specification[i].box1,
-			req.body.Specification[i].box2, 
-			furniture_id, req.body.Specification[i].box3,
-			req.body.Specification[i].box4]);
+	if (await queries.HasFields([req.body.Specification])) {
+		specification = new Table(await queries.GetAllInfo("Specification"));
 
-		specification.AddCount();
-	}
+		for (let i = 0; i < req.body.Specification.length; i++) {
+			await queries.Insert(specification.TableName, specification.Columns,
+				[specification.Count, req.body.Specification[i].box1,
+				req.body.Specification[i].box2, 
+				furniture_id, req.body.Specification[i].box3,
+				req.body.Specification[i].box4]);
+	
+			specification.AddCount();
+		}
+	}	
 
 	//External Link
+
 	external_links = new Table(await queries.GetAllInfo("External_Links"));
 
 	await queries.Insert(external_links.TableName, external_links.Columns,

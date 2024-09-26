@@ -295,6 +295,16 @@ const queries = {
 
 	GetInt: async function (string) {
 		return String(string).match(/\b[0-9]+\b/);
+	},
+
+	HasFields: async function (array) {
+		for (i = 0; i < array.length; i++) {
+			if (array[i] === undefined || array[i] === "" || array[i] === null) {
+				return false;
+			}
+		}
+
+		return true;
 	}
 
 }
