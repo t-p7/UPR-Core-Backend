@@ -24,7 +24,7 @@ router.post("/insert/furniture", async function (req, res) {
 	}
 
 	else {
-		res.status(403).json(message: "No country specified")
+		res.status(403).json({message: "No country specified"})
 	}
 	
 
@@ -54,7 +54,7 @@ router.post("/insert/furniture", async function (req, res) {
 	}
 
 	else {
-		res.status(403).json(message: "No Origin of Origin_of_Imported_Products specified")
+		res.status(403).json({message: "No Origin of Origin_of_Imported_Products specified"})
 	}
 	
 	
@@ -78,7 +78,7 @@ router.post("/insert/furniture", async function (req, res) {
 	}
 
 	else {
-		res.status(403).json(message: "No Manufacturer specified")
+		res.status(403).json({message: "No Manufacturer specified"})
 	}
 
 	//else {
@@ -106,7 +106,7 @@ router.post("/insert/furniture", async function (req, res) {
 	}
 
 	else {
-		res.status(403).json(message: "No Testing Agency specified")
+		res.status(403).json({message: "No Testing Agency specified"})
 	}
 	
 
@@ -132,7 +132,7 @@ router.post("/insert/furniture", async function (req, res) {
 	}
 
 	else {
-		res.status(403).json(message: "No Other Certification specified")
+		res.status(403).json({message: "No Other Certification specified"})
 	}
 	
 
@@ -156,7 +156,7 @@ router.post("/insert/furniture", async function (req, res) {
 	}
 
 	else {
-		res.status(403).json(message: "No UPIC specified")
+		res.status(403).json({message: "No UPIC specified"})
 	}
 	
 
@@ -185,7 +185,7 @@ router.post("/insert/furniture", async function (req, res) {
 
 
 	else {
-		res.status(403).json(message: "No Supplier specified")
+		res.status(403).json({message: "No Supplier specified"})
 	}
 
 
@@ -210,7 +210,7 @@ router.post("/insert/furniture", async function (req, res) {
 
 
 	else {
-		res.status(403).json(message: "No First Level Category specified")
+		res.status(403).json({message: "No First Level Category specified"})
 	}
 
 
@@ -235,7 +235,7 @@ router.post("/insert/furniture", async function (req, res) {
 
 
 	else {
-		res.status(403).json(message: "No Second Level Category specified")
+		res.status(403).json({message: "No Second Level Category specified"})
 	}
 
 
@@ -259,7 +259,7 @@ router.post("/insert/furniture", async function (req, res) {
 	}
 
 	else {
-		res.status(403).json(message: "No Third Level Category specified")
+		res.status(403).json({message: "No Third Level Category specified"})
 	}
 	
 
@@ -283,7 +283,7 @@ router.post("/insert/furniture", async function (req, res) {
 	}
 
 	else {
-		res.status(403).json(message: "No Fourth Level Category specified")
+		res.status(403).json({message: "No Fourth Level Category specified"})
 	}
 	
 
@@ -308,7 +308,7 @@ router.post("/insert/furniture", async function (req, res) {
 	}
 
 	else {
-		res.status(403).json(message: "No Colour specified")
+		res.status(403).json({message: "No Colour specified"})
 	}
 	
 
@@ -332,7 +332,7 @@ router.post("/insert/furniture", async function (req, res) {
 	}
 
 	else {
-		res.status(403).json(message: "No AU/NZ Code specified")
+		res.status(403).json({message: "No AU/NZ Code specified"})
 	}
 
 
@@ -356,7 +356,7 @@ router.post("/insert/furniture", async function (req, res) {
 	}
 
 	else {
-		res.status(403).json(message: "No Product Accreditation specified")
+		res.status(403).json({message: "No Product Accreditation specified"})
 	}
 	
 
@@ -450,7 +450,7 @@ router.post("/insert/furniture", async function (req, res) {
 	}
 
 	else {
-		res.status(403).json(message: "No DET Part Number or Generic Description specified")
+		res.status(403).json({message: "No DET Part Number or Generic Description specified"})
 	}
 	
 
