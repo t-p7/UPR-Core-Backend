@@ -1126,7 +1126,12 @@ router.post("/edit/furniture/:id", async function (req, res) {
 });
 
 router.post("/delete/furniture/:id", async function (req, res) {
-	furniture_details = await sql`SELECT * FROM "Furniture" WHERE "Furniture"."FurnitureID" = ${sql.unsafe(req.params.id)}`;
+	const furniture_details = await fetch(`http://localhost:4000/search/${req.params.id}`, {
+            method: "get",
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
 
 	await sql`DELETE FROM "Specification" WHERE "Specification"."FurnitureID" = ${req.params.id}`;
 
