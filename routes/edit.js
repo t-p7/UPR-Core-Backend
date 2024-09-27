@@ -1139,7 +1139,7 @@ router.post("/delete/furniture/:id", async function (req, res) {
 	details_check = await sql`SELECT * FROM "Furniture" WHERE "Furniture"."DetailsID" = ${furniture_details[0].DetailsID}`
 
 	if (details_check === null || details_check === undefined || details_check === "") {
-		await sql`DELETE FROM "Details" WHERE "Details"."DetailsID"`;
+		await sql`DELETE FROM "Details" WHERE "Details"."DetailsID" = ${furniture_details[0].DetailsID}`;
 	}
 
 	await sql`DELETE FROM "UPIC" WHERE "UPIC"."UPIC" = ${furniture_details[0].UPIC}`;
