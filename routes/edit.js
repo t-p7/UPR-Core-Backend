@@ -1133,7 +1133,8 @@ router.post("/delete/furniture/:id", async function (req, res) {
             },
         });
 
-	furniture_details = await search.json();
+	item = await search.json();
+	furniture_details = item.search[0];
 
 	await sql`DELETE FROM "Specification" WHERE "Specification"."FurnitureID" = ${req.params.id}`;
 
