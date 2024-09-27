@@ -1126,12 +1126,14 @@ router.post("/edit/furniture/:id", async function (req, res) {
 });
 
 router.post("/delete/furniture/:id", async function (req, res) {
-	const furniture_details = await fetch(`http://localhost:4000/search/${req.params.id}`, {
+	const search = await fetch(`http://localhost:4000/search/${req.params.id}`, {
             method: "get",
             headers: {
                 'Content-Type': 'application/json',
             },
         });
+
+	furniture_details = await search.json();
 
 	await sql`DELETE FROM "Specification" WHERE "Specification"."FurnitureID" = ${req.params.id}`;
 
