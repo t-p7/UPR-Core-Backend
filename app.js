@@ -29,7 +29,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // Use CORS middleware
 app.use(cors({
-  origin: 'http://localhost:3000', // Update this with your frontend URL
+  origin: 'http://34.83.158.160:3000', // Update this with your frontend URL
   methods: ['GET', 'POST'],
   allowedHeaders: ['Content-Type']
 }));
@@ -43,6 +43,8 @@ app.use('/', editRouter)
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "YOUR-DOMAIN.TLD"); // update to match the domain you will make the request from
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
   next(createError(404));
 });
 
