@@ -1,6 +1,6 @@
 var createError = require('http-errors');
 var express = require('express');
-const cors = require('cors'); // Import the cors package
+var cors = require('cors'); // Import the cors package
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
@@ -13,6 +13,8 @@ var csvRouter = require('./routes/csv');
 var editRouter = require('./routes/edit');
 
 var app = express();
+
+app.use(cors())
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
