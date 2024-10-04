@@ -8,7 +8,7 @@
 // 	console.log("Request body:", req.body);
 // 	// Ensure we are getting UPIC from the correct structure in req.body
 
-// 	// const searchResponse = await fetch(`http://localhost:5000/search/${req.params.id}`, {
+// 	// const searchResponse = await fetch(`http://localhost:4000/search/${req.params.id}`, {
 // 	// 	method: "get",
 // 	// 	headers: {
 // 	// 		'Content-Type': 'application/json',
@@ -31,7 +31,7 @@
 
 // 	try {
 // 		try {
-// 			const searchResponse = await fetch(`http://localhost:5000/search/${req.params.id}`, {
+// 			const searchResponse = await fetch(`http://localhost:4000/search/${req.params.id}`, {
 // 				method: "get",
 // 				headers: {
 // 					'Content-Type': 'application/json',
@@ -735,7 +735,7 @@ router.post("/edit/furniture/:id", async function (req, res) {
     // console.log("Request body:", req.body);
 
     try {
-        const searchResponse = await fetch(`http://localhost:5000/search/${req.params.id}`, {
+        const searchResponse = await fetch(`http://localhost:4000/search/${req.params.id}`, {
             method: "get",
             headers: {
                 'Content-Type': 'application/json',
@@ -1126,7 +1126,7 @@ router.post("/edit/furniture/:id", async function (req, res) {
 });
 
 router.post("/delete/furniture/:id", async function (req, res) {
-	const search = await fetch(`http://localhost:5000/search/${req.params.id}`, {
+	const search = await fetch(`http://localhost:4000/search/${req.params.id}`, {
             method: "get",
             headers: {
                 'Content-Type': 'application/json',

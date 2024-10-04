@@ -17,7 +17,7 @@ var app = express();
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
-app.set('port', 5000);
+app.set('port', 4000);
 
 app.use(logger('dev'));
 app.use(express.json());
