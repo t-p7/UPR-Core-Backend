@@ -25,7 +25,8 @@ router.post("/search/general", async function (req, res) {
 	}
 
 	else if (req.body.hasOwnProperty('Generic_Description')) {
-		search = await sql`${sql.unsafe(select)} WHERE "Furniture"."Generic_Description" LIKE '%${sql.unsafe(req.body.Generic_Description)}%'`
+		search = await sql`${sql.unsafe(select)} WHERE "Furniture"."Generic_Description" LIKE '%${sql.unsafe(req.body.Generic_Description)}%'`;
+		res.json({search});
 	}
 
 	/*
