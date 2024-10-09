@@ -4,7 +4,7 @@ var router = express.Router();
 router.post("/search/general", async function (req, res) {
 
 	var select = `SELECT 
-        "Furniture"."FurnitureID", "Furniture"."GenericDescription", "Furniture"."ProductCode", "Supplier"."SupplierName",
+        "Furniture"."FurnitureID", "Furniture"."Generic_Description", "Furniture"."ProductCode", "Supplier"."SupplierName",
         "Origin"."Origin_of_Imported_Products", "UPIC"."UPIC", "Furniture"."Unit_Price",
         "Furniture"."MSRP_Price", "External_Links"."Thumbnail"
         FROM 
@@ -24,8 +24,8 @@ router.post("/search/general", async function (req, res) {
 		res.json({search});
 	}
 
-	else if (req.body.hasOwnProperty('GenericDescription')) {
-		search = await sql`${sql.unsafe(select)} WHERE "Furniture"."GenericDescription" LIKE '%${sql.unsafe(req.body.GenericDescription)}%'`
+	else if (req.body.hasOwnProperty('Generic_Description')) {
+		search = await sql`${sql.unsafe(select)} WHERE "Furniture"."Generic_Description" LIKE '%${sql.unsafe(req.body.Generic_Description)}%'`
 	}
 
 	/*
