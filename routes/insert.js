@@ -366,21 +366,21 @@ router.post("/insert/furniture", async function (req, res) {
 
 	tier_id = tier.Count;
 
-	tier_check = await queries.Search(tier.TableName, [await queries.GetNumber(req.body.Tier1_Price),
-		await queries.GetInt(req.body.Tier1_Quantity), await queries.GetNumber(req.body.Tier2_Price), 
-		await queries.GetInt(req.body.Tier2_Quantity), await queries.GetNumber(req.body.Tier3_Price), 
-		await queries.GetInt(req.body.Tier3_Quantity), await queries.GetNumber(req.body.Tier4_Price),
-		await queries.GetInt(req.body.Tier4_Quantity), await queries.GetNumber(req.body.Tier5_Price), 
+	tier_check = await queries.Search(tier.TableName, [await queries.GetPrice(req.body.Tier1_Price),
+		await queries.GetInt(req.body.Tier1_Quantity), await queries.GetPrice(req.body.Tier2_Price), 
+		await queries.GetInt(req.body.Tier2_Quantity), await queries.GetPrice(req.body.Tier3_Price), 
+		await queries.GetInt(req.body.Tier3_Quantity), await queries.GetPrice(req.body.Tier4_Price),
+		await queries.GetInt(req.body.Tier4_Quantity), await queries.GetPrice(req.body.Tier5_Price), 
 		await queries.GetInt(req.body.Tier5_Quantity)
 		]);
 
 	if (tier_check === null) {
 		await queries.Insert(tier.TableName, tier.Columns, [tier_id,
 			await queries.GetNumber(req.body.Tier1_Price),
-			await queries.GetInt(req.body.Tier1_Quantity), await queries.GetNumber(req.body.Tier2_Price), 
-			await queries.GetInt(req.body.Tier2_Quantity), await queries.GetNumber(req.body.Tier3_Price), 
-			await queries.GetInt(req.body.Tier3_Quantity), await queries.GetNumber(req.body.Tier4_Price),
-			await queries.GetInt(req.body.Tier4_Quantity), await queries.GetNumber(req.body.Tier5_Price), 
+			await queries.GetInt(req.body.Tier1_Quantity), await queries.GetPrice(req.body.Tier2_Price), 
+			await queries.GetInt(req.body.Tier2_Quantity), await queries.GetPrice(req.body.Tier3_Price), 
+			await queries.GetInt(req.body.Tier3_Quantity), await queries.GetPrice(req.body.Tier4_Price),
+			await queries.GetInt(req.body.Tier4_Quantity), await queries.GetPrice(req.body.Tier5_Price), 
 			await queries.GetInt(req.body.Tier5_Quantity)]);
 	}
 
@@ -433,14 +433,14 @@ router.post("/insert/furniture", async function (req, res) {
 
 		furniture_check = await queries.Search(furniture.TableName, [req.body.ProductCode,
 			category4_id, supplier_id, origin_id, req.body.Generic_Description,
-			req.body.Long_Description, await queries.GetNumber(req.body.Unit_Price), await queries.GetNumber(req.body.MSRP_Price),
+			req.body.Long_Description, await queries.GetPrice(req.body.Unit_Price), await queries.GetPrice(req.body.MSRP_Price),
 			upic_id, manufacturer_id, testing_id, certification_id, details_id, tier_id]);
 
 		if (furniture_check === null) {
 			await queries.Insert(furniture.TableName, furniture.Columns, [furniture_id,
 				req.body.ProductCode,
 				category4_id, supplier_id, origin_id, req.body.Generic_Description,
-				req.body.Long_Description, await queries.GetNumber(req.body.Unit_Price), await queries.GetNumber(req.body.MSRP_Price),
+				req.body.Long_Description, await queries.GetPrice(req.body.Unit_Price), await queries.GetPrice(req.body.MSRP_Price),
 				upic_id, manufacturer_id, testing_id, certification_id, details_id, tier_id]);
 		}
 
@@ -487,7 +487,7 @@ router.post("/insert/furniture", async function (req, res) {
 	
 	for (let i = 0; i < req.body.ServiceRegions.length; i++) {
 		await queries.Insert(serviceregion.TableName, serviceregion.Columns, [region_id_list[i],
-			req.body.ServiceRegions[i].box2, req.body.ServiceRegions[i].box3, 
+			req.body.ServiceRegions[i].box2, await queries.GetPrice(req.body.ServiceRegions[i].box3), 
 			serviceregion.Count, furniture_id
 			]);
 		serviceregion.AddCount();

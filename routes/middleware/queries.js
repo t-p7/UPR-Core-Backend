@@ -293,6 +293,12 @@ const queries = {
 		return match ? parseFloat(match[0]) : null;
 	},
 
+	GetPrice: async function (string) {
+		float = await this.GetNumber(string);
+
+		return parseFloat(float.toFixed(2));
+	}
+
 	GetInt: async function (string) {
 		return String(string).match(/\b[0-9]+\b/);
 	},
