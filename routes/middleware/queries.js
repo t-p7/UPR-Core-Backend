@@ -297,7 +297,7 @@ const queries = {
 		float = await this.GetNumber(string);
 
 		return parseFloat(float.toFixed(2));
-	}
+	},
 
 	GetInt: async function (string) {
 		return String(string).match(/\b[0-9]+\b/);
