@@ -1116,6 +1116,60 @@ router.post("/edit/furniture/:id", async function (req, res) {
         }
 
         // Add similar logic for the rest of the sections: Regions, Specifications, External Links, etc.
+        // External Links Handling
+        const external_links = new Table(await queries.GetAllInfo("External_Links"));
+
+        // Extract external links data from req.body or fallback to existing data
+        const thumbnail = req.body.search.Thumbnail || searchItem.Thumbnail;
+        const primaryImage = req.body.search.Primary_Image || searchItem.Primary_Image;
+        const additionalImage = req.body.search.Additional_Image || searchItem.Additional_Image;
+        const additionalImage2 = req.body.search.Additional_Image2 || searchItem.Additional_Image2;
+        const additionalImage3 = req.body.search.Additional_Image3 || searchItem.Additional_Image3;
+        const additionalImage4 = req.body.search.Additional_Image4 || searchItem.Additional_Image4;
+        const additionalImage5 = req.body.search.Additional_Image5 || searchItem.Additional_Image5;
+        const furtherDocument1 = req.body.search.Further_Document1 || searchItem.Further_Document1;
+        const furtherDocument1Label = req.body.search.Further_Document1Label || searchItem.Further_Document1Label;
+        const furtherDocument2 = req.body.search.Further_Document2 || searchItem.Further_Document2;
+        const furtherDocument2Label = req.body.search.Further_Document2Label || searchItem.Further_Document2Label;
+
+        // Update or insert external links if there are changes
+        if (
+            thumbnail !== searchItem.Thumbnail ||
+            primaryImage !== searchItem.Primary_Image ||
+            additionalImage !== searchItem.Additional_Image ||
+            additionalImage2 !== searchItem.Additional_Image2 ||
+            additionalImage3 !== searchItem.Additional_Image3 ||
+            additionalImage4 !== searchItem.Additional_Image4 ||
+            additionalImage5 !== searchItem.Additional_Image5 ||
+            furtherDocument1 !== searchItem.Further_Document1 ||
+            furtherDocument1Label !== searchItem.Further_Document1Label ||
+            furtherDocument2 !== searchItem.Further_Document2 ||
+            furtherDocument2Label !== searchItem.Further_Document2Label
+        ) {
+            await queries.Update(
+                external_links.TableName,
+                external_links.Columns,
+                [
+                    external_links.Count,
+                    thumbnail,
+                    primaryImage,
+                    additionalImage,
+                    additionalImage2,
+                    additionalImage3,
+                    additionalImage4,
+                    additionalImage5,
+                    furtherDocument1,
+                    furtherDocument1Label,
+                    furtherDocument2,
+                    furtherDocument2Label,
+                    req.params.id  // Link back to the furniture ID
+                ],
+                req.params.id,
+                "FurnitureID"
+            );
+        } else {
+            console.log("No changes in external links data. Skipping update.");
+        }
 
         return res.status(200).json({ message: "Furniture data updated successfully" });
 
@@ -1126,35 +1180,35 @@ router.post("/edit/furniture/:id", async function (req, res) {
 });
 
 router.post("/delete/furniture/:id", async function (req, res) {
-	const search = await fetch(`http://localhost:4000/search/${req.params.id}`, {
-            method: "get",
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        });
+    const search = await fetch(`http://localhost:4000/search/${req.params.id}`, {
+        method: "get",
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    });
 
-	item = await search.json();
-	furniture_details = item.search[0];
+    item = await search.json();
+    furniture_details = item.search[0];
 
-	await sql`DELETE FROM "Specification" WHERE "Specification"."FurnitureID" = ${req.params.id}`;
+    await sql`DELETE FROM "Specification" WHERE "Specification"."FurnitureID" = ${req.params.id}`;
 
-	await sql`DELETE FROM "Delivery_&_Service_Region_Pricing" WHERE "Delivery_&_Service_Region_Pricing"."FurnitureID" = ${req.params.id}`;
+    await sql`DELETE FROM "Delivery_&_Service_Region_Pricing" WHERE "Delivery_&_Service_Region_Pricing"."FurnitureID" = ${req.params.id}`;
 
-	await sql`DELETE FROM "External_Links" WHERE "External_Links"."FurnitureID" = ${req.params.id}`;
+    await sql`DELETE FROM "External_Links" WHERE "External_Links"."FurnitureID" = ${req.params.id}`;
 
-	await sql`DELETE FROM "Furniture" WHERE "Furniture"."FurnitureID" = ${sql.unsafe(req.params.id)}`;
+    await sql`DELETE FROM "Furniture" WHERE "Furniture"."FurnitureID" = ${sql.unsafe(req.params.id)}`;
 
-	details_check = await sql`SELECT * FROM "Furniture" WHERE "Furniture"."DetailsID" = ${furniture_details.DetailsID}`
+    details_check = await sql`SELECT * FROM "Furniture" WHERE "Furniture"."DetailsID" = ${furniture_details.DetailsID}`
 
-	if (details_check === null || details_check === undefined || details_check === "") {
-		await sql`DELETE FROM "Details" WHERE "Details"."DetailsID" = ${furniture_details.DetailsID}`;
-	}
+    if (details_check === null || details_check === undefined || details_check === "") {
+        await sql`DELETE FROM "Details" WHERE "Details"."DetailsID" = ${furniture_details.DetailsID}`;
+    }
 
-	await sql`DELETE FROM "UPIC" WHERE "UPIC"."UPIC" = ${furniture_details.UPIC}`;
+    await sql`DELETE FROM "UPIC" WHERE "UPIC"."UPIC" = ${furniture_details.UPIC}`;
 
-	
 
-	res.status(200).json({message: `Deleted Furniture item: ${req.params.id}`});
+
+    res.status(200).json({ message: `Deleted Furniture item: ${req.params.id}` });
 });
 
 module.exports = router;
