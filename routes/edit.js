@@ -1224,7 +1224,7 @@ router.post("/edit/furniture/:id", async function (req, res) {
         // Product Accreditation Handling
         const accredit = new Table(await queries.GetAllInfo("Product_Accreditation"));
         let accredit_id = searchItem.Product_AccreditationID; // Start with the existing Product_AccreditationID from searchItem
-        console.log("this is :",searchItem.Product_Accreditation_Scheme);
+        console.log("this is :", searchItem.Product_Accreditation_Scheme);
 
         // Check if Accreditation_Scheme has changed and needs updating
         if (req.body.search.Product_Accreditation_Scheme && req.body.search.Product_Accreditation_Scheme !== searchItem.Product_Accreditation_Scheme) {
@@ -1244,6 +1244,68 @@ router.post("/edit/furniture/:id", async function (req, res) {
                 console.log("Using existing Product_AccreditationID:", accredit_id);
             }
         }
+
+
+        // Tier Pricing Handling
+        const tier = new Table(await queries.GetAllInfo("Tier_Pricing_&_Quantity"));
+        let tier_id = searchItem.TierID; // Start with the existing TierID from searchItem
+
+        // Check if any Tier Pricing values have changed
+        if (
+            req.body.search.Tier1_Price != searchItem.Tier1_Price || req.body.search.Tier1_Quantity != searchItem.Tier1_Quantity ||
+            req.body.search.Tier2_Price != searchItem.Tier2_Price || req.body.search.Tier2_Quantity != searchItem.Tier2_Quantity ||
+            req.body.search.Tier3_Price != searchItem.Tier3_Price || req.body.search.Tier3_Quantity != searchItem.Tier3_Quantity ||
+            req.body.search.Tier4_Price != searchItem.Tier4_Price || req.body.search.Tier4_Quantity != searchItem.Tier4_Quantity ||
+            req.body.search.Tier5_Price != searchItem.Tier5_Price || req.body.search.Tier5_Quantity != searchItem.Tier5_Quantity
+        ) {
+            console.log("Tier Pricing mismatch detected. Checking for existing record or inserting a new one.");
+
+            // Search for existing tier pricing record
+            const tier_check = await queries.Search(tier.TableName, [
+                await queries.GetNumber(req.body.search.Tier1_Price),
+                await queries.GetInt(req.body.search.Tier1_Quantity),
+                await queries.GetNumber(req.body.search.Tier2_Price),
+                await queries.GetInt(req.body.search.Tier2_Quantity),
+                await queries.GetNumber(req.body.search.Tier3_Price),
+                await queries.GetInt(req.body.search.Tier3_Quantity),
+                await queries.GetNumber(req.body.search.Tier4_Price),
+                await queries.GetInt(req.body.search.Tier4_Quantity),
+                await queries.GetNumber(req.body.search.Tier5_Price),
+                await queries.GetInt(req.body.search.Tier5_Quantity)
+            ]);
+
+            if (tier_check === null || tier_check.length === 0) {
+                // Insert new record if no matching tier pricing is found
+                tier_id = tier.Count + 1; // Ensure a unique ID for the new record
+                console.log("Inserting new Tier Pricing record with TierID:", tier_id);
+                await queries.Insert(tier.TableName, tier.Columns, [
+                    tier_id,
+                    await queries.GetNumber(req.body.search.Tier1_Price),
+                    await queries.GetInt(req.body.search.Tier1_Quantity),
+                    await queries.GetNumber(req.body.search.Tier2_Price),
+                    await queries.GetInt(req.body.search.Tier2_Quantity),
+                    await queries.GetNumber(req.body.search.Tier3_Price),
+                    await queries.GetInt(req.body.search.Tier3_Quantity),
+                    await queries.GetNumber(req.body.search.Tier4_Price),
+                    await queries.GetInt(req.body.search.Tier4_Quantity),
+                    await queries.GetNumber(req.body.search.Tier5_Price),
+                    await queries.GetInt(req.body.search.Tier5_Quantity)
+                ]);
+            } else {
+                // Use the existing TierID
+                tier_id = tier_check[0].TierID;
+                console.log("Using existing TierID:", tier_id);
+            }
+        }
+
+        // Update Furniture table if TierID has changed
+        if (tier_id !== searchItem.TierID) {
+            console.log("Updating Furniture table with new TierID:", tier_id);
+            await queries.Update("Furniture", ["TierID"], [tier_id], req.params.id, "FurnitureID");
+        } else {
+            console.log("No change in TierID. Skipping Furniture update.");
+        }
+
 
 
 
