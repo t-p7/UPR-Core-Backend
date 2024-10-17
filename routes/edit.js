@@ -1058,6 +1058,222 @@ router.post("/edit/furniture/:id", async function (req, res) {
             colours_id = searchItem.ColourID;
         }
 
+
+        // AUNZ_Code Handling
+        const aunzcode = new Table(await queries.GetAllInfo("AU/NZ_Code"));
+        let aunzcode_id = searchItem.AUNZ_CodeID; // Start with the existing AUNZ_CodeID from searchItem
+
+        if (req.body.search.AUNZ_Code && req.body.search.AUNZ_Code !== searchItem.AUNZ_Code) {
+            const aunzcode_check = await queries.Search(aunzcode.TableName, [req.body.search.AUNZ_Code]);
+
+            if (aunzcode_check === null || aunzcode_check.length === 0) {
+                // Insert new record since no matching AUNZ_Code was found
+                aunzcode_id = aunzcode.Count + 1; // Ensure a unique ID
+                console.log("Inserting new AUNZ_Code record with AUNZ_CodeID:", aunzcode_id);
+                await queries.Insert(aunzcode.TableName, aunzcode.Columns, [aunzcode_id, req.body.search.AUNZ_Code]);
+            } else {
+                // Use the existing AUNZ_CodeID
+                aunzcode_id = aunzcode_check[0].AUNZ_CodeID;
+            }
+        }
+
+        // Product Accreditation Handling
+        const accredit = new Table(await queries.GetAllInfo("Product_Accreditation"));
+        let accredit_id = searchItem.Product_AccreditationID; // Start with the existing Product_AccreditationID from searchItem
+        console.log("this is :", searchItem.Product_Accreditation_Scheme);
+
+        // Check if Accreditation_Scheme has changed and needs updating
+        if (req.body.search.Product_Accreditation_Scheme && req.body.search.Product_Accreditation_Scheme !== searchItem.Product_Accreditation_Scheme) {
+            console.log("Accreditation Scheme mismatch detected. Checking for existing record or inserting a new one.");
+
+            // Search for the accreditation scheme
+            const accredit_check = await queries.Search(accredit.TableName, [req.body.search.Product_Accreditation_Scheme]);
+
+            if (accredit_check === null || accredit_check.length === 0) {
+                // If no match is found, insert a new record
+                accredit_id = accredit.Count + 1; // Generate a new unique ID
+                console.log("Inserting new Product_Accreditation record with Product_AccreditationID:", accredit_id);
+                await queries.Insert(accredit.TableName, accredit.Columns, [accredit_id, req.body.search.Product_Accreditation_Scheme]);
+            } else {
+                // If a match is found, use the existing ID
+                accredit_id = accredit_check[0].Product_AccreditationID;
+                console.log("Using existing Product_AccreditationID:", accredit_id);
+            }
+        }
+
+
+        // Tier Pricing Handling
+        const tier = new Table(await queries.GetAllInfo("Tier_Pricing_&_Quantity"));
+        let tier_id = searchItem.TierID; // Start with the existing TierID from searchItem
+
+        // Check if any Tier Pricing values have changed
+        if (
+            req.body.search.Tier1_Price != searchItem.Tier1_Price || req.body.search.Tier1_Quantity != searchItem.Tier1_Quantity ||
+            req.body.search.Tier2_Price != searchItem.Tier2_Price || req.body.search.Tier2_Quantity != searchItem.Tier2_Quantity ||
+            req.body.search.Tier3_Price != searchItem.Tier3_Price || req.body.search.Tier3_Quantity != searchItem.Tier3_Quantity ||
+            req.body.search.Tier4_Price != searchItem.Tier4_Price || req.body.search.Tier4_Quantity != searchItem.Tier4_Quantity ||
+            req.body.search.Tier5_Price != searchItem.Tier5_Price || req.body.search.Tier5_Quantity != searchItem.Tier5_Quantity
+        ) {
+            console.log("Tier Pricing mismatch detected. Checking for existing record or inserting a new one.");
+
+            // Search for existing tier pricing record
+            const tier_check = await queries.Search(tier.TableName, [
+                await queries.GetNumber(req.body.search.Tier1_Price),
+                await queries.GetInt(req.body.search.Tier1_Quantity),
+                await queries.GetNumber(req.body.search.Tier2_Price),
+                await queries.GetInt(req.body.search.Tier2_Quantity),
+                await queries.GetNumber(req.body.search.Tier3_Price),
+                await queries.GetInt(req.body.search.Tier3_Quantity),
+                await queries.GetNumber(req.body.search.Tier4_Price),
+                await queries.GetInt(req.body.search.Tier4_Quantity),
+                await queries.GetNumber(req.body.search.Tier5_Price),
+                await queries.GetInt(req.body.search.Tier5_Quantity)
+            ]);
+
+            if (tier_check === null || tier_check.length === 0) {
+                // Insert new record if no matching tier pricing is found
+                tier_id = tier.Count + 1; // Ensure a unique ID for the new record
+                console.log("Inserting new Tier Pricing record with TierID:", tier_id);
+                await queries.Insert(tier.TableName, tier.Columns, [
+                    tier_id,
+                    await queries.GetNumber(req.body.search.Tier1_Price),
+                    await queries.GetInt(req.body.search.Tier1_Quantity),
+                    await queries.GetNumber(req.body.search.Tier2_Price),
+                    await queries.GetInt(req.body.search.Tier2_Quantity),
+                    await queries.GetNumber(req.body.search.Tier3_Price),
+                    await queries.GetInt(req.body.search.Tier3_Quantity),
+                    await queries.GetNumber(req.body.search.Tier4_Price),
+                    await queries.GetInt(req.body.search.Tier4_Quantity),
+                    await queries.GetNumber(req.body.search.Tier5_Price),
+                    await queries.GetInt(req.body.search.Tier5_Quantity)
+                ]);
+            } else {
+                // Use the existing TierID
+                tier_id = tier_check[0].TierID;
+                console.log("Using existing TierID:", tier_id);
+            }
+        }
+
+        // Update Furniture table if TierID has changed
+        if (tier_id !== searchItem.TierID) {
+            console.log("Updating Furniture table with new TierID:", tier_id);
+            await queries.Update("Furniture", ["TierID"], [tier_id], req.params.id, "FurnitureID");
+        } else {
+            console.log("No change in TierID. Skipping Furniture update.");
+        }
+
+        // Details Handling
+        // Details Handling
+        const details = new Table(await queries.GetAllInfo("Details"));
+        let details_id = searchItem.DetailsID || details.Count + 1;
+
+        // Extract values from req.body.search, falling back to searchItem only if req.body.search values are not defined
+        const assemblyRequired = req.body.search.Assembly_Required || searchItem.Assembly_Required || 'N';
+        const height = req.body.search.Height ? await queries.GetNumber(req.body.search.Height) : searchItem.Height || 0;
+        const width = req.body.search.Width ? await queries.GetNumber(req.body.search.Width) : searchItem.Width || 0;
+        const depth = req.body.search.Depth ? await queries.GetNumber(req.body.search.Depth) : searchItem.Depth || 0;
+        const weight = req.body.search.Weight ? await queries.GetNumber(req.body.search.Weight) : searchItem.Weight || 0;
+        const material = req.body.search.Material || searchItem.Material || '';
+        const stackable = req.body.search.Stackable || searchItem.Stackable || 'N';
+        const adjustability = req.body.search.Adjustibility || searchItem.Adjustibility || 'N';
+        const ergonomic = req.body.search.Ergonomic || searchItem.Ergonomic || 'N';
+        const mechanism = req.body.search.Mechanism || searchItem.Mechanism || '';
+        const lumbarSupport = req.body.search.Lumbar_Support || searchItem.Lumbar_Support || 'N';
+        const compatibleWith = req.body.search.Compatible_With || searchItem.Compatible_With || '';
+        const castors = req.body.search.Castors || searchItem.Castors || 'N';
+        const liftingCapacity = req.body.search.Lifting_Capacity ? await queries.GetNumber(req.body.search.Lifting_Capacity) : searchItem.Lifting_Capacity || 0;
+        const maxLoadWeight = req.body.search.Max_Load_Weight ? await queries.GetNumber(req.body.search.Max_Load_Weight) : searchItem.Max_Load_Weight || 0;
+        const defaultWarranty = req.body.search.Default_Warranty || searchItem.Default_Warranty || '0';
+        const aunzCodeId = aunzcode_id || req.body.search.AUNZ_CodeID || searchItem.AUNZ_CodeID || 1;
+        const productAccreditationId = accredit_id || req.body.search.Product_AccreditationID || searchItem.Product_AccreditationID || 1;
+        const testCertificateExpiry = req.body.search.Test_Certificate_Expiry || searchItem.Test_Certificate_Expiry || '';
+
+        // Log values for debugging
+
+
+        // Check if any fields have changed in Details
+        if (
+            assemblyRequired !== searchItem.Assembly_Required ||
+            height !== searchItem.Height ||
+            width !== searchItem.Width ||
+            depth !== searchItem.Depth ||
+            weight !== searchItem.Weight ||
+            material !== searchItem.Material ||
+            stackable !== searchItem.Stackable ||
+            adjustability !== searchItem.Adjustibility ||
+            ergonomic !== searchItem.Ergonomic ||
+            mechanism !== searchItem.Mechanism ||
+            lumbarSupport !== searchItem.Lumbar_Support ||
+            compatibleWith !== searchItem.Compatible_With ||
+            castors !== searchItem.Castors ||
+            liftingCapacity !== searchItem.Lifting_Capacity ||
+            maxLoadWeight !== searchItem.Max_Load_Weight ||
+            defaultWarranty !== searchItem.Default_Warranty ||
+            aunzCodeId !== searchItem.AUNZ_CodeID ||
+            productAccreditationId !== searchItem.Product_AccreditationID ||
+            testCertificateExpiry !== searchItem.Test_Certificate_Expiry
+        ) {
+            console.log("Changes detected in Details. Proceeding with update.");
+
+            // Check if the DetailsID already exists
+
+            if (details_check && details_check.length > 0) {
+                // If the DetailsID exists, update the existing record
+                console.log("Updating existing details record with DetailsID:", details_id);
+                await queries.Update(details.TableName, details.Columns, [
+                    details_id,
+                    colours_id,
+                    assemblyRequired,
+                    height,
+                    width,
+                    depth,
+                    weight,
+                    material,
+                    stackable,
+                    adjustability,
+                    ergonomic,
+                    mechanism,
+                    lumbarSupport,
+                    compatibleWith,
+                    castors,
+                    liftingCapacity,
+                    maxLoadWeight,
+                    defaultWarranty,
+                    aunzCodeId,
+                    productAccreditationId,
+                    testCertificateExpiry
+                ], details_id, "DetailsID");
+            } else {
+                // If the DetailsID does not exist, insert a new record
+                console.log("Inserting new details record with DetailsID:", details_id);
+                await queries.Insert(details.TableName, details.Columns, [
+                    details_id,
+                    colours_id,
+                    assemblyRequired,
+                    height,
+                    width,
+                    depth,
+                    weight,
+                    material,
+                    stackable,
+                    adjustability,
+                    ergonomic,
+                    mechanism,
+                    lumbarSupport,
+                    compatibleWith,
+                    castors,
+                    liftingCapacity,
+                    maxLoadWeight,
+                    defaultWarranty,
+                    aunzCodeId,
+                    productAccreditationId,
+                    testCertificateExpiry
+                ]);
+            }
+        } else {
+            console.log("No changes detected in details, keeping existing DetailsID:", details_id);
+        }
+
         // Furniture Handling
         const furniture = new Table(await queries.GetAllInfo("Furniture"));
         const furniture_id = req.params.id;
@@ -1116,6 +1332,135 @@ router.post("/edit/furniture/:id", async function (req, res) {
         }
 
         // Add similar logic for the rest of the sections: Regions, Specifications, External Links, etc.
+        // Regions Handling
+        const region = new Table(await queries.GetAllInfo("Regions"));
+        const region_id_list = [];
+
+        // Check if region_pricing exists in the request body
+        if (req.body.region_pricing && req.body.region_pricing.length > 0) {
+            for (let i = 0; i < req.body.region_pricing.length; i++) {
+                const regionName = req.body.region_pricing[i].RegionName;
+
+                const region_check = await queries.Search(region.TableName, [regionName]);
+
+                if (region_check === null) {
+                    // Insert new region
+                    await queries.Insert(region.TableName, region.Columns, [region.Count + i, regionName]);
+                    region_id_list.push(region.Count + i); // Add new ID to list
+                } else {
+                    region_id_list.push(region_check[0].RegionID); // Use existing ID
+                }
+            }
+
+            // Delivery & Service Region Pricing
+            const serviceregion = new Table(await queries.GetAllInfo("Delivery_&_Service_Region_Pricing"));
+
+            // Optionally delete or update existing region pricing for the furniture item
+            await sql.unsafe(`DELETE FROM "${serviceregion.TableName}" WHERE "FurnitureID" = ${furniture_id}`);
+
+            // Insert updated service regions
+            for (let i = 0; i < req.body.region_pricing.length; i++) {
+                await queries.Insert(serviceregion.TableName, serviceregion.Columns, [
+                    region_id_list[i],
+                    req.body.region_pricing[i]["FIS/DTT/DIP"],  // FIS/DTT/DIP value
+                    req.body.region_pricing[i].Price,           // Price value
+                    serviceregion.Count,
+                    furniture_id
+                ]);
+                serviceregion.AddCount();
+            }
+        } else {
+            console.log("No service regions provided in the request.");
+        }
+
+        // Specification Handling
+        const specification = new Table(await queries.GetAllInfo("Specification"));
+
+        for (let i = 0; i < req.body.specification.length; i++) {
+            const specData = req.body.specification[i];
+
+            const existingSpec = await queries.Search(specification.TableName, [specData.SpecificationID]);
+
+            if (existingSpec && existingSpec.length > 0) {
+                // Update if specification exists
+                await queries.Update(specification.TableName, specification.Columns, [
+                    specData.SpecificationID,
+                    specData.SpecificationName,
+                    specData.SpecificationDescription,
+                    furniture_id,
+                    specData.Prerequisites,
+                    specData.Antirequisites
+                ], specData.SpecificationID, "SpecificationID");
+            } else {
+                // Insert if specification does not exist
+                await queries.Insert(specification.TableName, specification.Columns, [
+                    specification.Count + i,
+                    specData.SpecificationName,
+                    specData.SpecificationDescription,
+                    furniture_id,
+                    specData.Prerequisites,
+                    specData.Antirequisites
+                ]);
+                specification.AddCount();
+            }
+        }
+
+
+
+        // External Links Handling
+        const external_links = new Table(await queries.GetAllInfo("External_Links"));
+
+        // Extract external links data from req.body or fallback to existing data
+        const thumbnail = req.body.search.Thumbnail || searchItem.Thumbnail;
+        const primaryImage = req.body.search.Primary_Image || searchItem.Primary_Image;
+        const additionalImage = req.body.search.Additional_Image || searchItem.Additional_Image;
+        const additionalImage2 = req.body.search.Additional_Image2 || searchItem.Additional_Image2;
+        const additionalImage3 = req.body.search.Additional_Image3 || searchItem.Additional_Image3;
+        const additionalImage4 = req.body.search.Additional_Image4 || searchItem.Additional_Image4;
+        const additionalImage5 = req.body.search.Additional_Image5 || searchItem.Additional_Image5;
+        const furtherDocument1 = req.body.search.Further_Document1 || searchItem.Further_Document1;
+        const furtherDocument1Label = req.body.search.Further_Document1Label || searchItem.Further_Document1Label;
+        const furtherDocument2 = req.body.search.Further_Document2 || searchItem.Further_Document2;
+        const furtherDocument2Label = req.body.search.Further_Document2Label || searchItem.Further_Document2Label;
+
+        // Update or insert external links if there are changes
+        if (
+            thumbnail !== searchItem.Thumbnail ||
+            primaryImage !== searchItem.Primary_Image ||
+            additionalImage !== searchItem.Additional_Image ||
+            additionalImage2 !== searchItem.Additional_Image2 ||
+            additionalImage3 !== searchItem.Additional_Image3 ||
+            additionalImage4 !== searchItem.Additional_Image4 ||
+            additionalImage5 !== searchItem.Additional_Image5 ||
+            furtherDocument1 !== searchItem.Further_Document1 ||
+            furtherDocument1Label !== searchItem.Further_Document1Label ||
+            furtherDocument2 !== searchItem.Further_Document2 ||
+            furtherDocument2Label !== searchItem.Further_Document2Label
+        ) {
+            await queries.Update(
+                external_links.TableName,
+                external_links.Columns,
+                [
+                    external_links.Count,
+                    thumbnail,
+                    primaryImage,
+                    additionalImage,
+                    additionalImage2,
+                    additionalImage3,
+                    additionalImage4,
+                    additionalImage5,
+                    furtherDocument1,
+                    furtherDocument1Label,
+                    furtherDocument2,
+                    furtherDocument2Label,
+                    req.params.id  // Link back to the furniture ID
+                ],
+                req.params.id,
+                "FurnitureID"
+            );
+        } else {
+            console.log("No changes in external links data. Skipping update.");
+        }
 
         return res.status(200).json({ message: "Furniture data updated successfully" });
 
@@ -1126,35 +1471,35 @@ router.post("/edit/furniture/:id", async function (req, res) {
 });
 
 router.post("/delete/furniture/:id", async function (req, res) {
-	const search = await fetch(`http://localhost:4000/search/${req.params.id}`, {
-            method: "get",
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        });
+    const search = await fetch(`http://localhost:4000/search/${req.params.id}`, {
+        method: "get",
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    });
 
-	item = await search.json();
-	furniture_details = item.search[0];
+    item = await search.json();
+    furniture_details = item.search[0];
 
-	await sql`DELETE FROM "Specification" WHERE "Specification"."FurnitureID" = ${req.params.id}`;
+    await sql`DELETE FROM "Specification" WHERE "Specification"."FurnitureID" = ${req.params.id}`;
 
-	await sql`DELETE FROM "Delivery_&_Service_Region_Pricing" WHERE "Delivery_&_Service_Region_Pricing"."FurnitureID" = ${req.params.id}`;
+    await sql`DELETE FROM "Delivery_&_Service_Region_Pricing" WHERE "Delivery_&_Service_Region_Pricing"."FurnitureID" = ${req.params.id}`;
 
-	await sql`DELETE FROM "External_Links" WHERE "External_Links"."FurnitureID" = ${req.params.id}`;
+    await sql`DELETE FROM "External_Links" WHERE "External_Links"."FurnitureID" = ${req.params.id}`;
 
-	await sql`DELETE FROM "Furniture" WHERE "Furniture"."FurnitureID" = ${sql.unsafe(req.params.id)}`;
+    await sql`DELETE FROM "Furniture" WHERE "Furniture"."FurnitureID" = ${sql.unsafe(req.params.id)}`;
 
-	details_check = await sql`SELECT * FROM "Furniture" WHERE "Furniture"."DetailsID" = ${furniture_details.DetailsID}`
+    details_check = await sql`SELECT * FROM "Furniture" WHERE "Furniture"."DetailsID" = ${furniture_details.DetailsID}`
 
-	if (details_check === null || details_check === undefined || details_check === "") {
-		await sql`DELETE FROM "Details" WHERE "Details"."DetailsID" = ${furniture_details.DetailsID}`;
-	}
+    if (details_check === null || details_check === undefined || details_check === "") {
+        await sql`DELETE FROM "Details" WHERE "Details"."DetailsID" = ${furniture_details.DetailsID}`;
+    }
 
-	await sql`DELETE FROM "UPIC" WHERE "UPIC"."UPIC" = ${furniture_details.UPIC}`;
+    await sql`DELETE FROM "UPIC" WHERE "UPIC"."UPIC" = ${furniture_details.UPIC}`;
 
-	
 
-	res.status(200).json({message: `Deleted Furniture item: ${req.params.id}`});
+
+    res.status(200).json({ message: `Deleted Furniture item: ${req.params.id}` });
 });
 
 module.exports = router;
